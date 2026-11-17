@@ -1,0 +1,13 @@
+{
+  "name": "lectia-1-ebusiness",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lecția 1 eBusiness: pagină statică interactivă",
+  "scripts": {
+    "build": "echo Static site, nothing to build",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

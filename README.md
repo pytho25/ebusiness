@@ -23,6 +23,15 @@ Deschidere din terminal:
 open lectia-1-interactiva/lectia-1-ebusiness.html
 ```
 
+Pentru găzduire, folderul are un server static minimal (`server.js`, fără dependențe, Node.js 18 sau mai nou). Pornește pe portul din variabila `PORT`, implicit 8080:
+
+```sh
+cd lectia-1-interactiva
+npm start
+```
+
+Setări pentru o platformă de găzduire: calea aplicației `lectia-1-interactiva`, build `npm run build`, pornire `npm start`, director de ieșire `.`.
+
 ## Suportul de curs
 
 Documentul complet există în două formate:
