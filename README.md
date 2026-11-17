@@ -31,6 +31,8 @@ npm start
 
 Setări pentru o platformă de găzduire Node.js: calea aplicației `.` (rădăcina repo-ului), build `npm run build`, pornire `npm start`, director de ieșire `lectia-1-interactiva`.
 
+Pe cPanel, lecția se poate publica și ca pagină statică, fără Node.js, prin Git Version Control: fișierul `.cpanel.yml` copiază lecția în `public_html/lectia-1/` la fiecare deploy. Pentru alt folder sau un subdomeniu, se schimbă `DEPLOYPATH` în `.cpanel.yml`.
+
 ## Suportul de curs
 
 Documentul complet există în două formate:

@@ -1,0 +1,11 @@
+---
+# cPanel Git Version Control deployment: publishes Lesson 1 as a static page.
+# Result: https://<your-domain>/lectia-1/
+# To publish somewhere else (another folder or a subdomain's document root),
+# change DEPLOYPATH below.
+deployment:
+  tasks:
+    - export DEPLOYPATH=${HOME:-/home/$(whoami)}/public_html/lectia-1/
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp lectia-1-interactiva/index.html $DEPLOYPATH
+    - /bin/cp lectia-1-interactiva/lectia-1-ebusiness.html $DEPLOYPATH
