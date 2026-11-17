@@ -1,0 +1,1377 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Lecția 1 eBusiness</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: un ecran pe viewport, titlu mare aliniat la stânga, o singură zonă de lucru sub el;
+   sus progresul pe etape, jos navigarea. Albastru = venit și selecție, chihlimbar hașurat = cost,
+   verde/roșu cu semn = rezultat, galben de marker = ideea ecranului. */
+:root{
+  --bg:#F1F3F7; --surface:#FFFFFF; --sunk:#E3E8F0; --ink:#0E1A2B; --muted:#4A5972; --line:#C2CBD9;
+  --accent:#1B49D1; --on-accent:#FFFFFF; --cost:#A94F08; --plus:#0A7453; --minus:#B3261E; --mark:#FFDD55;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Instrument Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:clamp(15px,0.7vw + 9px,24px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0B1220; --surface:#141D30; --sunk:#1D2840; --ink:#EAF0FA; --muted:#A3B0C8; --line:#33405C;
+  --accent:#8FB3FF; --on-accent:#0B1220; --cost:#F0A63C; --plus:#4BD4A3; --minus:#FF9488; --mark:#6A5400; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0B1220; --surface:#141D30; --sunk:#1D2840; --ink:#EAF0FA; --muted:#A3B0C8; --line:#33405C;
+  --accent:#8FB3FF; --on-accent:#0B1220; --cost:#F0A63C; --plus:#4BD4A3; --minus:#FF9488; --mark:#6A5400; color-scheme:dark }
+
+html{box-sizing:border-box;height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.45;overflow:hidden}
+#app{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+#app.present{font-size:1.06rem}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3,p,ol,ul,figure{margin:0}
+.num,table,.kpi-v{font-variant-numeric:tabular-nums}
+
+/* bara de sus */
+.bar{display:flex;align-items:center;gap:1rem;padding-block:.5rem;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--display);font-weight:800;font-size:.95rem;white-space:nowrap}
+.rail{flex:1;display:flex;gap:.6rem;min-width:0}
+.seg{min-width:0;display:flex;flex-direction:column;gap:.2rem}
+.seg-name{font-size:.62rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg.on .seg-name{color:var(--ink);font-weight:700}
+.seg-dots{display:flex;gap:3px}
+.dot{flex:1;height:.5rem;min-width:6px;border:0;padding:0;border-radius:2px;background:var(--sunk);cursor:pointer}
+.dot.done{background:var(--muted)}
+.dot.cur{background:var(--accent)}
+.tools{display:flex;gap:.3rem;flex-wrap:wrap;justify-content:flex-end}
+.tbtn{border:1px solid var(--line);background:transparent;border-radius:.4rem;padding:.25rem .55rem;font-size:.72rem;cursor:pointer;white-space:nowrap}
+.tbtn:hover{background:var(--sunk)}
+.tbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#app.present .brand,#app.present .tools .opt-hide{display:none}
+
+/* ecrane */
+#stage{position:relative;min-height:0;overflow:hidden}
+.screen{position:absolute;inset:0;overflow-y:auto;display:flex;flex-direction:column;gap:clamp(.7rem,2vh,1.4rem);
+  padding-block:clamp(.9rem,3vh,2.2rem);padding-inline:clamp(0px,2.5vw,3.5rem)}
+.screen.enter>*{animation:rise .45s cubic-bezier(.2,.7,.2,1) both}
+.screen.enter>*:nth-child(2){animation-delay:.06s}.screen.enter>*:nth-child(3){animation-delay:.12s}
+.screen.enter>*:nth-child(4){animation-delay:.18s}.screen.enter>*:nth-child(n+5){animation-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translateY(.7rem)}to{opacity:1;transform:none}}
+.eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+h1,h2{font-family:var(--display);font-weight:800;letter-spacing:-.025em;line-height:1.02;text-wrap:balance}
+h1{font-size:clamp(2.1rem,5.4vw,4.6rem);max-width:17ch}
+h2{font-size:clamp(1.6rem,3.5vw,3rem);max-width:26ch}
+h2:focus{outline:none}
+h3{font-family:var(--display);font-weight:700;font-size:1.1rem;letter-spacing:-.01em}
+mark{background:var(--mark);color:inherit;padding:0 .12em;border-radius:.12em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.lede{font-size:1.2rem;max-width:62ch;color:var(--muted)}
+.lede b{color:var(--ink)}
+.small{font-size:.82rem;color:var(--muted)}
+.fictiv{display:inline-block;font-family:var(--mono);font-size:.68rem;border:1px dashed var(--muted);color:var(--muted);padding:.1rem .45rem;border-radius:.3rem;white-space:nowrap}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:clamp(.8rem,2vw,2rem);align-items:start}
+.cols>*{min-width:0}
+.wide-l{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+.wide-r{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}
+@media (max-width:820px){.wide-l,.wide-r{grid-template-columns:minmax(0,1fr)}}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.stack{display:flex;flex-direction:column;gap:.7rem;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:.6rem;padding:1rem 1.1rem}
+.label{font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+.plus{color:var(--plus)}.minus{color:var(--minus)}.costc{color:var(--cost)}
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:.5rem;padding:.45rem .9rem;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:disabled{opacity:.35;cursor:default}
+.secret-box{border-left:.3rem solid var(--accent);background:var(--surface);padding:.8rem 1rem;border-radius:0 .5rem .5rem 0;max-width:75ch}
+.secret-box p+p{margin-top:.5rem}
+
+/* opțiuni de vot */
+.quiz{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:.6rem}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:.2rem .7rem;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:.6rem;padding:.7rem .85rem;cursor:pointer;align-items:start}
+.opt:hover{border-color:var(--muted)}
+.opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.opt-k{font-family:var(--mono);font-weight:600;width:1.7rem;height:1.7rem;display:grid;place-items:center;border-radius:50%;background:var(--sunk)}
+.opt[aria-pressed="true"] .opt-k{background:var(--accent);color:var(--on-accent)}
+.opt-t{font-weight:600;font-size:1.02rem;align-self:center}
+.opt-fb{grid-column:2;font-size:.86rem;color:var(--muted)}
+.opt-fb b{color:var(--ink);display:block}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:2rem;padding:.3rem .8rem;cursor:pointer;font-weight:600;font-size:.92rem;text-align:left}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip.ok{border-color:var(--plus)}.chip.bad{border-color:var(--minus);border-style:dashed}
+
+/* ecran 1 */
+.ticket{font-family:var(--mono);font-size:.82rem;background:var(--surface);border:1px solid var(--line);padding:1rem 1.1rem;max-width:23rem;border-radius:.3rem;
+  background-image:linear-gradient(var(--line),var(--line));background-size:100% 1px;background-repeat:no-repeat;background-position:0 2.6rem}
+.ticket div{display:flex;justify-content:space-between;gap:1rem}
+.ticket .tot{border-top:1px dashed var(--muted);margin-top:.5rem;padding-top:.5rem;font-weight:600}
+.plan{list-style:none;padding:0;display:flex;flex-direction:column;gap:.5rem;counter-reset:p}
+.plan li{counter-increment:p;display:grid;grid-template-columns:2.2rem 1fr;align-items:baseline;font-size:1.05rem;font-weight:600}
+.plan li::before{content:counter(p);font-family:var(--display);font-weight:800;font-size:1.6rem;color:var(--accent)}
+.plan span{display:block;font-weight:400;color:var(--muted);font-size:.88rem}
+
+/* ecran 2 */
+.duo{display:flex;flex-wrap:wrap;gap:clamp(1rem,4vw,4rem)}
+.big{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,5vw,4.2rem);line-height:1;letter-spacing:-.03em}
+.duo .small{max-width:22ch}
+
+/* ecran 3 și 4: mulțimi incluse */
+.nest{border:3px dashed var(--line);border-radius:1rem;padding:1rem;display:flex;flex-direction:column;gap:.8rem;transition:border-color .5s}
+.revealed .nest,.nest.live{border-color:var(--ink);border-style:solid}
+.nest-in{border:3px solid var(--accent);border-radius:.8rem;padding:.9rem;display:flex;flex-direction:column;gap:.6rem;background:var(--surface)}
+.zone-t{font-size:.9rem;color:var(--muted)}
+.zone-t b{font-family:var(--display);font-size:1.25rem;color:var(--ink);margin-right:.4rem}
+.tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.tag{font-size:.85rem;padding:.2rem .6rem;border-radius:.3rem;background:var(--sunk)}
+.zone-items{display:flex;flex-wrap:wrap;gap:.4rem;min-height:2.6rem;align-content:flex-start}
+[data-zone].over{background:var(--sunk)}
+[data-zone]{cursor:pointer}
+.pool{border:1px solid var(--line);border-radius:.6rem;padding:.7rem;background:var(--surface);min-height:4rem;display:flex;flex-wrap:wrap;gap:.4rem;align-content:flex-start}
+.fb-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:.45rem;font-size:.88rem}
+.fb-list b{display:block}
+
+/* ecran 6: harta */
+.map{display:flex;flex-wrap:wrap;gap:.3rem 0;align-items:stretch}
+.node{position:relative;flex:1 1 6.5rem;margin-right:1.4rem;border:2px solid var(--line);background:var(--surface);border-radius:.6rem;padding:.6rem .5rem;cursor:pointer;text-align:center;font-weight:700;display:flex;flex-direction:column;gap:.15rem;align-items:center;transition:transform .3s,border-color .3s}
+.node:last-child{margin-right:0}
+.node:not(:last-child)::after{content:"→";position:absolute;right:-1.25rem;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:400}
+.node small{font-family:var(--mono);font-weight:400;font-size:.62rem;color:var(--muted)}
+.node[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--on-accent);transform:translateY(-.25rem)}
+.node[aria-pressed="true"] small{color:inherit}
+.loop{font-size:.8rem;color:var(--muted);border:1px dashed var(--line);border-top:0;border-radius:0 0 .8rem .8rem;padding:.3rem .8rem;text-align:center}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:1rem}
+.facts p{font-size:.98rem}
+
+/* ecran 7 */
+.journey{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.7rem}
+.journey li{background:var(--surface);border:1px solid var(--line);border-radius:.6rem;padding:.75rem .85rem;display:flex;flex-direction:column;gap:.4rem;min-width:0}
+.journey .when{font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+.journey .st{font-size:.86rem;border-top:1px dashed var(--line);padding-top:.4rem;min-height:3.6em}
+.journey .st.bad{color:var(--minus)}.journey .st.good{color:var(--plus)}
+
+/* ecran 8: funnel */
+.funnel{display:flex;flex-direction:column;gap:.45rem;max-width:60rem}
+.fstep{display:grid;grid-template-columns:minmax(0,1fr);gap:.1rem}
+.fbar{height:2.3rem;background:var(--accent);border-radius:.25rem;min-width:.35rem;width:0;transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.fstep.q .fbar{background:transparent;border:2px dashed var(--line);width:100%!important}
+.fline{display:flex;flex-wrap:wrap;gap:.3rem .9rem;align-items:baseline;font-size:.95rem}
+.fline b{font-family:var(--mono);font-size:1.15rem}
+
+/* ecran 9 */
+.dec{display:flex;flex-direction:column;gap:.45rem;padding-block:.7rem;border-top:1px solid var(--line)}
+.dec h3{font-size:1.15rem}
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.5rem 1.4rem;font-size:.84rem}
+.gloss b{font-family:var(--mono)}
+
+/* simulator */
+.ctl{display:grid;grid-template-columns:1fr auto;gap:0 .8rem;align-items:baseline}
+.ctl label{font-weight:600;font-size:.95rem}
+.ctl output{font-family:var(--mono);font-weight:600}
+.ctl input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--accent);margin:.15rem 0 .55rem}
+.kpis{display:flex;flex-wrap:wrap;gap:.6rem 2rem}
+.kpi-v{font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,2.6vw,2.3rem);line-height:1.05;letter-spacing:-.02em}
+.kpi .small{display:block}
+.strip{display:flex;height:1.5rem;border-radius:.25rem;overflow:hidden;border:1px solid var(--line)}
+.strip i{display:block;height:100%}
+.sw{display:inline-block;width:.8rem;height:.8rem;border-radius:.15rem;vertical-align:-.05rem;margin-right:.3rem;border:1px solid var(--ink)}
+.p-cogs{background:repeating-linear-gradient(45deg,var(--cost) 0 3px,transparent 3px 6px)}
+.p-mk{background:var(--cost)}
+.p-proc{background:repeating-linear-gradient(-45deg,var(--cost) 0 2px,transparent 2px 7px)}
+.p-fix{background:repeating-linear-gradient(90deg,var(--muted) 0 2px,transparent 2px 6px)}
+.p-rez{background:var(--plus)}
+.legend{display:flex;flex-wrap:wrap;gap:.2rem 1rem;font-size:.8rem}
+details{font-size:.86rem}
+details summary{cursor:pointer;font-weight:700}
+details ul{margin:.4rem 0 0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.25rem}
+code{font-family:var(--mono);font-size:.92em;background:var(--sunk);padding:.05rem .3rem;border-radius:.2rem}
+
+/* bare orizontale (pârghii) */
+.hbars{display:flex;flex-direction:column;gap:.5rem;max-width:56rem}
+.hbar{display:grid;grid-template-columns:minmax(9rem,16rem) minmax(0,1fr) auto;gap:.7rem;align-items:center;font-size:.95rem}
+.hbar .track{height:1.4rem;background:var(--sunk);border-radius:.2rem;overflow:hidden}
+.hbar .fill{height:100%;background:var(--plus);width:0;transition:width .8s cubic-bezier(.2,.7,.2,1)}
+.hbar b{font-family:var(--mono)}
+@media (max-width:560px){.hbar{grid-template-columns:1fr auto}.hbar .track{grid-column:1/-1;order:3}}
+
+/* grafice */
+figure.chart{background:var(--surface);border:1px solid var(--line);border-radius:.6rem;padding:.8rem .9rem;min-width:0}
+figure.chart figcaption{font-weight:700;font-size:.95rem;margin-bottom:.3rem}
+figure.chart figcaption>span{font-weight:400;color:var(--muted);font-size:.8rem;display:block}
+svg{display:block;width:100%;height:auto;max-height:48vh}
+svg text{font-family:var(--mono);font-size:12px;fill:var(--muted)}
+svg text.v{fill:var(--ink);font-weight:600}
+svg .grid{stroke:var(--line);stroke-width:1;fill:none}
+svg .axis{stroke:var(--ink);stroke-width:1.5;fill:none}
+svg .ln{stroke:var(--ink);stroke-width:2.2;fill:none}
+svg .ln.hi{stroke:var(--accent);stroke-width:3.4}
+svg .ln.dim{stroke:var(--muted);stroke-width:1.6;opacity:.6}
+svg .pt{fill:var(--ink);stroke:var(--surface);stroke-width:1}
+svg .pt.hi{fill:var(--accent)}svg .pt.dim{fill:var(--muted);opacity:.6}
+svg .b{fill:var(--muted)}svg .b.hi{fill:var(--accent)}
+svg .b.venit{fill:var(--accent)}svg .b.cost{fill:var(--cost)}svg .b.pos{fill:var(--plus)}svg .b.neg{fill:var(--minus)}
+svg .hatch{stroke:var(--surface);stroke-width:2.5}
+svg .sl{stroke:var(--surface);stroke-width:1.5}
+svg .s0{fill:var(--accent)}svg .s1{fill:var(--ink)}svg .s2{fill:var(--muted)}svg .s3{fill:var(--line)}
+svg .conn{stroke:var(--muted);stroke-dasharray:3 3;fill:none}
+.verdict{font-size:.98rem;max-width:70ch}
+.verdict b{display:block;font-family:var(--display);font-size:1.15rem}
+
+/* laborator */
+.filters{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;align-items:center}
+.fgrp{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:.6rem}
+table{border-collapse:collapse;width:100%;font-size:.84rem}
+th,td{padding:.4rem .5rem;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:normal;vertical-align:bottom}
+.lab-cols{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)}
+@media (max-width:980px){.lab-cols{grid-template-columns:minmax(0,1fr)}}
+tr:last-child td{border-bottom:0}
+tr.sel td{background:var(--sunk);font-weight:700}
+td{font-family:var(--mono)}td:first-child{font-family:var(--body);font-weight:600}
+
+/* observație / ipoteză */
+.stm{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem 1rem;align-items:center;padding-block:.55rem;border-top:1px solid var(--line)}
+.stm p{font-size:1rem}
+.stm .opt-fb{grid-column:1/-1}
+@media (max-width:560px){.stm{grid-template-columns:minmax(0,1fr)}}
+
+/* provocarea */
+.form{display:flex;flex-direction:column;gap:.75rem}
+.form label{font-weight:700;font-size:.9rem;display:block;margin-bottom:.2rem}
+textarea,select,input[type=text]{width:100%;border:2px solid var(--line);border-radius:.45rem;background:var(--surface);padding:.45rem .6rem}
+textarea{min-height:3.4rem;resize:vertical}
+.fisa{font-size:1.02rem;display:flex;flex-direction:column;gap:.5rem}
+.fisa dt{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+.fisa dd{margin:0 0 .3rem;font-weight:600;overflow-wrap:anywhere}
+.fisa dd.empty{color:var(--minus);font-weight:400}
+
+/* recapitulare */
+.recap details{border-top:1px solid var(--line);padding-block:.55rem;font-size:1rem}
+.recap summary{font-size:1.05rem}
+.recap details p{margin-top:.35rem;color:var(--muted);max-width:75ch}
+
+/* navigare jos */
+.nav{display:flex;align-items:center;gap:.6rem;padding-block:.5rem;border-top:1px solid var(--line)}
+.nav .count{font-family:var(--mono);font-size:.82rem;color:var(--muted);margin-inline:auto;text-align:center}
+.nav .btn{padding:.35rem .8rem;font-size:.9rem}
+#bReveal{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
+
+/* note și cuprins */
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(30rem,100%);background:var(--surface);border-left:2px solid var(--ink);z-index:30;overflow-y:auto;
+  padding:1rem 1.1rem;padding-top:calc(1rem + env(safe-area-inset-top,0px));padding-right:max(1.1rem,env(safe-area-inset-right,0px));font-size:.9rem;display:flex;flex-direction:column;gap:.7rem}
+.notes h3{margin-top:.3rem}
+.notes ul{margin:.2rem 0 0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.25rem}
+.clock{font-family:var(--mono);font-size:.85rem}
+#over{position:fixed;inset:0;background:var(--bg);z-index:40;overflow-y:auto;padding:1.2rem max(16px,env(safe-area-inset-right,0px)) 1.2rem max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:1rem}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:1rem 2rem}
+.toc ol{list-style:none;padding:0;margin:.3rem 0 0;display:flex;flex-direction:column;gap:.15rem}
+.toc button{width:100%;text-align:left;border:0;background:transparent;padding:.3rem .4rem;border-radius:.3rem;cursor:pointer;display:grid;grid-template-columns:1.8rem 1fr auto;gap:.3rem}
+.toc button:hover,.toc button.cur{background:var(--sunk)}
+.toc button span:first-child,.toc button span:last-child{font-family:var(--mono);color:var(--muted);font-size:.8rem}
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.25rem 1.5rem;font-size:.85rem}
+kbd{font-family:var(--mono);font-size:.8em;border:1px solid var(--muted);border-bottom-width:2px;border-radius:.25rem;padding:0 .3rem;margin-right:.3rem}
+
+.tip{border-bottom:2px dotted var(--accent);cursor:help}
+.tip:focus-visible{outline-offset:1px}
+#tipbox{position:fixed;z-index:60;max-width:min(23rem,calc(100vw - 32px));background:var(--ink);color:var(--bg);padding:.55rem .75rem;border-radius:.45rem;font-size:.86rem;line-height:1.4;pointer-events:none}
+#tipbox b{display:block;font-family:var(--display)}
+.extras{margin-top:auto;padding-top:.7rem;border-top:1px dashed var(--line);display:flex;flex-wrap:wrap;gap:.6rem 2rem;align-items:flex-start}
+.extras>*{flex:1 1 19rem;min-width:0}
+.hintbox{display:flex;flex-direction:column;gap:.4rem;align-items:flex-start}
+.hintbtn{font-size:.82rem;font-weight:700;border-color:var(--accent);color:var(--accent)}
+.hintbtn:disabled{opacity:.5;cursor:default}
+.hints{margin:0;padding-left:1.2rem;font-size:.92rem;display:flex;flex-direction:column;gap:.3rem}
+.hints li{animation:rise .35s both}
+details.more{font-size:.9rem}
+details.more>div{margin-top:.45rem;display:flex;flex-direction:column;gap:.4rem;max-width:78ch;color:var(--muted)}
+details.more b{color:var(--ink)}
+details.more ul{margin:0}
+.tog{display:grid;grid-template-columns:auto 1fr;gap:.1rem .7rem;align-items:center;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:.6rem;padding:.5rem .7rem;cursor:pointer;width:100%}
+.tog b{font-size:.98rem}.tog .small{grid-column:2}
+.tog .box{font-family:var(--mono);font-weight:600;width:1.6rem;height:1.6rem;display:grid;place-items:center;border:2px solid var(--muted);border-radius:.3rem;grid-row:1/3}
+.tog[aria-pressed="true"]{border-color:var(--accent)}
+.tog[aria-pressed="true"] .box{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+svg .best{stroke:var(--plus);stroke-width:1.5;stroke-dasharray:4 3;fill:none}
+svg .now{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.mis{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.25rem;font-size:.86rem}
+.mis li{display:grid;grid-template-columns:1.3rem 1fr;gap:.2rem}
+.mis li.done{color:var(--plus);font-weight:700}
+.reduce *,.reduce *::before,.reduce *::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){.screen.enter>*{animation:none}}
+@media (max-width:700px){
+  .seg-name{display:none}.brand{display:none}.tbtn{padding:.25rem .4rem}
+  .bar{flex-wrap:wrap;gap:.4rem}.rail{flex-basis:100%;order:2}.tools{flex:1;justify-content:flex-start}
+  .node{flex-basis:100%;margin-right:0;margin-bottom:1.1rem;flex-direction:row;justify-content:space-between}
+  .node:not(:last-child)::after{content:"↓";right:50%;top:auto;bottom:-1.25rem;transform:none}
+  .nav .btn span{display:none}
+}
+</style>
+
+<div id="app">
+<header class="bar">
+  <div class="brand">Cămara · Lecția 1</div>
+  <nav class="rail" id="rail" aria-label="Progres pe etape"></nav>
+  <div class="tools">
+    <button class="tbtn" id="tToc" type="button" title="Cuprins și taste (O)">Cuprins</button>
+    <button class="tbtn" id="tNotes" type="button" title="Note pentru profesor (N)">Note</button>
+    <button class="tbtn" id="tPresent" type="button" aria-pressed="false" title="Mod prezentare (P)">Prezentare</button>
+    <button class="tbtn opt-hide" id="tMotion" type="button" aria-pressed="false" title="Reduce animațiile (M)">Fără animații</button>
+    <button class="tbtn opt-hide" id="tTheme" type="button" title="Temă luminoasă sau întunecată (T)">Temă</button>
+  </div>
+</header>
+
+<main id="stage">
+
+<!-- 1 -->
+<section class="screen" data-stage="0" data-title="Rolul vostru: echipa Cămării">
+  <p class="eyebrow">E-Business și Vizualizarea Datelor · Lecția 1</p>
+  <h1>Cum funcționează o afacere <mark>digitală</mark> și cum decide cu date</h1>
+  <p class="lede">În următoarele 90 de minute sunteți echipa care conduce <b>Cămara de la Dunăre</b>, un mic magazin online din Galați cu dulcețuri, zacuscă și miere de la producători locali.</p>
+  <div class="cols">
+    <div class="ticket" aria-label="Exemplu de comandă">
+      <div><b>CĂMARA DE LA DUNĂRE</b><span>#1042</span></div>
+      <div style="margin-top:1rem"><span>2 × Dulceață de gutui</span><span>56,00</span></div>
+      <div><span>1 × Zacuscă cu vinete</span><span>24,00</span></div>
+      <div><span>1 × Miere de salcâm</span><span>38,00</span></div>
+      <div><span>1 × Sirop de soc</span><span>32,00</span></div>
+      <div class="tot"><span>TOTAL</span><span>150,00 lei</span></div>
+    </div>
+    <ol class="plan">
+      <li><div>Cum funcționează afacerea digitală<span>Ce se întâmplă de la reclamă până la colet</span></div></li>
+      <li><div>Ce măsurăm și cum arătăm datele<span>Indicatori, simulator, grafice care ajută sau păcălesc</span></div></li>
+      <li><div>Ce decizie luăm și cum o verificăm<span>Laborator cu date și provocarea echipelor</span></div></li>
+    </ol>
+  </div>
+  <p><span class="fictiv">Date fictive</span> <span class="small">Magazinul și toate cifrele din lecție sunt inventate pentru exercițiu.</span></p>
+</section>
+
+<!-- 2 -->
+<section class="screen" data-stage="0" data-title="Dilema: comenzi în creștere, profit în scădere" data-reveal>
+  <h2>Comenzile cresc, dar profitul scade. <mark>Ce ai verifica prima dată?</mark></h2>
+  <div class="duo" id="dilemaNums"></div>
+  <div class="quiz" id="qDilema"></div>
+  <div class="secret-box" data-secret hidden id="dilemaHint"></div>
+</section>
+
+<!-- 3 -->
+<section class="screen" data-stage="1" data-title="eCommerce este o parte din eBusiness" data-reveal>
+  <h2>Magazinul online este doar <mark>partea care se vede</mark></h2>
+  <p class="lede">Cămara are site, coș și plată cu cardul. Este deja o afacere digitală completă? Votați: da sau nu.</p>
+  <div class="cols wide-l">
+    <div class="nest">
+      <p class="zone-t" data-secret hidden><b>eBusiness</b> afacere electronică: tehnologia digitală folosită în toate procesele firmei</p>
+      <div class="nest-in">
+        <p class="zone-t"><b>eCommerce</b> comerț electronic: cumpărarea și vânzarea online, cu tot cu plată</p>
+        <div class="tags"><span class="tag">pagina de produs</span><span class="tag">coșul</span><span class="tag">plata cu cardul</span></div>
+      </div>
+      <div class="tags" data-secret hidden><span class="tag">stocul</span><span class="tag">comenzile către producători</span><span class="tag">relația cu clienții</span><span class="tag">livrarea</span><span class="tag">facturarea</span><span class="tag">rapoartele</span></div>
+    </div>
+    <div class="stack" data-secret hidden>
+      <p><b>Nu încă.</b> Vânzarea online este eCommerce. Afacerea devine digitală abia când și procesele din spate lucrează cu aceleași date.</p>
+      <p><b>Un exemplu, două etichete:</b> plata cu cardul este eCommerce. Scăderea automată a stocului după plată este eBusiness, dar nu este eCommerce.</p>
+      <p class="small">Orice proces de eCommerce este și eBusiness. Invers nu este adevărat.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="screen" data-stage="1" data-title="Activitate: clasificarea proceselor" data-reveal>
+  <h2>Unde pui fiecare proces al Cămării?</h2>
+  <p class="small">Trage fiecare proces în zona potrivită. Fără mouse: alege procesul, apoi atinge zona (sau tastele <kbd>1</kbd> eCommerce, <kbd>2</kbd> restul eBusiness, <kbd>0</kbd> înapoi).</p>
+  <div class="cols wide-r">
+    <div class="stack">
+      <p class="label">De clasificat</p>
+      <div class="pool" id="clsPool" data-zone="pool"></div>
+      <button class="btn ghost" type="button" id="clsReset" style="align-self:flex-start">Ia de la capăt</button>
+    </div>
+    <div class="nest live" data-zone="ebiz" id="zEbizBox">
+      <p class="zone-t"><b>eBusiness</b> toate procesele digitale ale firmei</p>
+      <div class="nest-in" data-zone="ecom">
+        <p class="zone-t"><b>eCommerce</b> vânzarea și plata online</p>
+        <div class="zone-items" id="zEcom"></div>
+      </div>
+      <p class="zone-t">Restul eBusiness: procesele din spatele vânzării</p>
+      <div class="zone-items" id="zEbiz"></div>
+    </div>
+  </div>
+  <div class="secret-box" data-secret hidden id="clsFb"></div>
+</section>
+
+<!-- 5 -->
+<section class="screen" data-stage="1" data-title="Cine cu cine vinde și din ce vin banii" data-reveal>
+  <h2><mark>Cine cu cine</mark> face afaceri nu spune din ce vin banii</h2>
+  <div class="cols">
+    <div class="stack">
+      <p class="label">1. Relația dintre participanți</p>
+      <div class="chips" id="relChips"></div>
+      <p class="label" style="margin-top:.6rem">2. Mecanismul de venit</p>
+      <div class="chips" id="mecChips"></div>
+    </div>
+    <div class="panel stack" id="comboOut" aria-live="polite"></div>
+  </div>
+  <p class="lede" style="font-size:1.05rem"><b>Întrebare pentru sală:</b> „Abonamentul” este un model B2C sau B2B?</p>
+  <div class="secret-box" data-secret hidden>
+    <p><b>Niciunul.</b> Abonamentul este un mecanism de venit și merge cu orice relație: cutia lunară pentru clienți (B2C) sau aprovizionarea săptămânală a unei cafenele (B2B).</p>
+    <p>Când descrii o afacere, răspunde separat la două întrebări: cui vinde și cum încasează.</p>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="screen" data-stage="1" data-title="Activitate: harta afacerii">
+  <h2>Drumul unei comenzi, de la reclamă la client mulțumit</h2>
+  <div>
+    <div class="map" id="map"></div>
+    <p class="loop">clientul mulțumit revine și recomandă: drumul reîncepe de la primul pas</p>
+  </div>
+  <div class="row">
+    <button class="btn" type="button" id="mapPlay">▶ Urmărește comanda #1042</button>
+    <span class="small">Alege orice etapă ca să vezi ce date lasă în urmă.</span>
+  </div>
+  <div class="panel" id="mapOut" aria-live="polite"></div>
+</section>
+
+<!-- 7 -->
+<section class="screen" data-stage="1" data-title="Canalele și experiența clientului între ele" data-reveal>
+  <h2>Ioana cumpără o dată, dar trece prin <mark>patru canale</mark></h2>
+  <div class="row">
+    <div class="fgrp" role="group" aria-label="Felul în care lucrează canalele">
+      <button class="chip" type="button" id="omSep" aria-pressed="true">Canale separate</button>
+      <button class="chip" type="button" id="omInt" aria-pressed="false">Canale integrate (omnichannel)</button>
+    </div>
+    <span class="small">Omnichannel: toate canalele lucrează cu aceleași date despre client.</span>
+  </div>
+  <ol class="journey" id="journey"></ol>
+  <p class="lede" style="font-size:1.05rem"><b>Predicție:</b> cărui canal îi trecem în raport vânzarea Ioanei?</p>
+  <div class="quiz" id="qAttr"></div>
+</section>
+
+<!-- 8 -->
+<section class="screen" data-stage="2" data-title="Pâlnia de conversie" data-reveal>
+  <h2>Din 100 de vizitatori ai Cămării, <mark>câți comandă?</mark></h2>
+  <p class="lede" style="font-size:1.08rem"><b>Gândește-te la tine:</b> din ultimele 10 magazine online pe care ai intrat, de la câte ai cumpărat?</p>
+  <div class="quiz" id="qFunnel" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,9rem),1fr))"></div>
+  <div class="funnel" id="funnel"></div>
+  <div class="secret-box" data-secret hidden id="funnelFb"></div>
+</section>
+
+<!-- 9 -->
+<section class="screen" data-stage="2" data-title="Indicatorul potrivit pentru fiecare decizie" data-reveal>
+  <h2>Un indicator este util doar <mark>legat de o decizie</mark></h2>
+  <p class="small">KPI (Key Performance Indicator) înseamnă indicator-cheie de performanță: o cifră pe care o urmărești pentru că îți schimbă deciziile. Pentru fiecare decizie de mai jos, alegeți indicatorul la care v-ați uita primul.</p>
+  <div id="decs"></div>
+  <div class="gloss">
+    <p><b>CR</b> rata de conversie = comenzi ÷ vizite</p>
+    <p><b>AOV</b> valoarea medie a comenzii = venit ÷ comenzi</p>
+    <p><b>CAC</b> costul de achiziție a clientului = cost de marketing ÷ clienți noi</p>
+    <p><b>ROAS</b> randamentul reclamelor = venit din reclame ÷ costul reclamelor</p>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="screen" data-stage="2" data-title="Activitate: simulatorul antreprenorului">
+  <h2>Mișcă o pârghie și vezi ce rămâne din venit</h2>
+  <div class="cols wide-r">
+    <div class="stack">
+      <div class="row">
+        <button class="chip" type="button" data-preset="sep">Septembrie</button>
+        <button class="chip" type="button" data-preset="nov">Noiembrie</button>
+        <button class="btn ghost" type="button" id="simReset">Resetează</button>
+      </div>
+      <div id="simCtl"></div>
+      <div><p class="label" style="margin-bottom:.3rem">Misiuni pentru echipe</p><ul class="mis" id="simMis" aria-live="polite"></ul></div>
+      <details>
+        <summary>Formule, costuri incluse și limite</summary>
+        <ul>
+          <li><code>comenzi = vizite × rata de conversie</code></li>
+          <li><code>venit = comenzi × valoarea medie a comenzii</code></li>
+          <li><code>marja brută = venit × marja</code> (ce rămâne după costul mărfii)</li>
+          <li><code>rezultat = marja brută - marketing - comenzi × 14 lei - 10.000 lei</code></li>
+          <li>Incluse: costul mărfii, marketingul, ambalarea și livrarea (14 lei pe comandă, ipoteză), costurile fixe lunare (10.000 lei, ipoteză).</li>
+          <li>Lipsesc: taxele, retururile, comisioanele de plată, stocul nevândut.</li>
+          <li>Limită: pârghiile se mișcă independent și gratis. În realitate, un buget mai mare aduce trafic, iar o reducere schimbă și conversia, și marja. Ecranul următor leagă fiecare pârghie de costul ei.</li>
+        </ul>
+      </details>
+    </div>
+    <div class="stack">
+      <div class="kpis" id="simKpi" aria-live="polite"></div>
+      <figure class="chart"><figcaption>De la venit la rezultat <span>lei pe lună · costurile sunt hașurate <span class="fictiv">Date fictive</span></span></figcaption><div id="simChart"></div></figure>
+      <div class="stack" style="gap:.35rem"><p class="label" id="stripT">Din 100 de lei încasați</p><div class="strip" id="simStrip"></div><div class="legend" id="simLegend"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10b: nimic nu este gratis -->
+<section class="screen" data-stage="2" data-title="Activitate: nicio pârghie nu este gratis">
+  <h2>Nicio pârghie nu se mișcă <mark>gratis</mark></h2>
+  <p class="small">Aceeași Cămară din noiembrie, dar acum fiecare decizie vine cu prețul ei. Căutați combinația cu cel mai bun rezultat.</p>
+  <div class="cols wide-r">
+    <div class="stack">
+      <div id="tcCtl"></div>
+      <div class="stack" id="tcTog" style="gap:.4rem"></div>
+      <button class="btn ghost" type="button" id="tcReset" style="align-self:flex-start">Înapoi la noiembrie</button>
+    </div>
+    <div class="stack">
+      <div class="kpis" id="tcKpi" aria-live="polite"></div>
+      <figure class="chart"><figcaption>Rezultatul în funcție de bugetul de reclame <span>lei pe lună, cu celelalte decizii așa cum sunt setate acum <span class="fictiv">Date fictive</span></span></figcaption><div id="tcChart"></div></figure>
+      <div class="tablewrap"><table id="tcTable"></table></div>
+      <p class="small">Fiecare rând arată ce s-ar pierde dacă ai anula doar acea decizie. Efectele nu se adună exact, pentru că deciziile se influențează între ele.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="screen" data-stage="2" data-title="Predicție: care pârghie contează mai mult" data-reveal>
+  <h2>Ai voie la o singură schimbare. <mark>Pe care o alegi?</mark></h2>
+  <p class="small">Punct de plecare: luna noiembrie a Cămării. Votați înainte de a vedea calculul.</p>
+  <div class="quiz" id="qLever"></div>
+  <div class="stack" data-secret hidden>
+    <p class="label">Câți lei în plus pe lună la rezultat <span class="fictiv">Date fictive</span></p>
+    <div class="hbars" id="leverBars"></div>
+    <div class="secret-box" id="leverFb"></div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="screen" data-stage="2" data-title="Activitate: alegerea vizualizării">
+  <h2>Aceleași date, patru grafice. <mark>Care răspunde la întrebare?</mark></h2>
+  <div class="row"><span class="label">Întrebarea</span><div class="chips" id="vizTask"></div></div>
+  <div class="cols wide-r">
+    <div class="stack">
+      <p class="label">Alege graficul</p>
+      <div class="chips" id="vizType"></div>
+      <div class="verdict" id="vizVerdict" aria-live="polite"></div>
+    </div>
+    <figure class="chart"><figcaption id="vizCap"></figcaption><div id="vizChart"></div></figure>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="screen" data-stage="2" data-title="Graficul care păcălește: axa trunchiată" data-reveal>
+  <h2>Privește doar barele. <mark>De câte ori au crescut comenzile?</mark></h2>
+  <div class="cols wide-l">
+    <figure class="chart"><figcaption>Comenzi pe lună, Cămara <span>număr de comenzi <span class="fictiv">Date fictive</span></span></figcaption><div id="axChart"></div></figure>
+    <div class="stack">
+      <div class="quiz" id="qAxis" style="grid-template-columns:minmax(0,1fr)"></div>
+      <div class="stack" data-secret hidden>
+        <div class="ctl"><label for="axStart">Axa verticală pornește de la</label><output id="axOut"></output>
+          <input type="range" id="axStart" min="0" max="500" step="50" value="450"></div>
+        <div class="secret-box" id="axFb"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="screen" data-stage="3" data-title="Patru întrebări pe care le pui datelor" data-reveal>
+  <h2>De la „ce s-a întâmplat” la <mark>„ce facem”</mark></h2>
+  <div class="cols wide-r">
+    <div class="chips" id="anSteps" style="flex-direction:column;align-items:stretch"></div>
+    <div class="panel stack" id="anOut" aria-live="polite"></div>
+  </div>
+  <p class="lede" style="font-size:1.05rem"><b>Ce fel de analiză este?</b> „Dacă păstrăm ritmul, în decembrie vom avea în jur de 850 de comenzi.”</p>
+  <div class="quiz" id="qAn" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr))"></div>
+</section>
+
+<!-- 15 -->
+<section class="screen" data-stage="3" data-title="Activitate: laboratorul deciziilor">
+  <h2>De ce a scăzut rezultatul? Căutați în date</h2>
+  <div class="filters">
+    <div class="fgrp" id="labPer" role="group" aria-label="Perioadă"><span class="label">Perioadă</span></div>
+    <div class="fgrp" id="labCh" role="group" aria-label="Canal"><span class="label">Canal</span></div>
+    <span class="fictiv">Date fictive · canalul = ultimul clic înainte de comandă</span>
+  </div>
+  <div class="kpis" id="labKpi" aria-live="polite"></div>
+  <div class="cols lab-cols">
+    <figure class="chart"><figcaption><span class="fgrp" id="labMet" role="group" aria-label="Măsură"></span><span id="labCap"></span></figcaption><div id="labChart"></div></figure>
+    <div class="stack">
+      <div class="tablewrap"><table id="labTable"></table></div>
+      <p class="small">Contribuția = marja brută - marketing - ambalare și livrare. Costurile fixe (2.500 lei pe săptămână) se scad doar la nivelul întregii afaceri.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="screen" data-stage="3" data-title="Observație sau ipoteză?" data-reveal>
+  <h2>Ce <mark>vedem</mark> în date și ce doar <mark>presupunem</mark></h2>
+  <p class="small">Pentru fiecare afirmație alegeți: observație (se citește direct din date) sau ipoteză (o explicație care trebuie verificată).</p>
+  <div id="stms"></div>
+  <div class="secret-box" data-secret hidden id="verdict"></div>
+</section>
+
+<!-- 17 -->
+<section class="screen" data-stage="3" data-title="Provocarea finală: decizia echipei" data-reveal>
+  <h2>O singură intervenție. <mark>Ce alegeți și cum aflați dacă a mers?</mark></h2>
+  <div class="row">
+    <div class="fgrp" role="group" aria-label="Afacerea analizată">
+      <button class="chip" type="button" id="fmCam" aria-pressed="true">Pentru Cămara</button>
+      <button class="chip" type="button" id="fmMea" aria-pressed="false">Pentru afacerea mea</button>
+    </div>
+    <span class="small" id="fmHint"></span>
+  </div>
+  <div class="cols">
+    <form class="form" id="fForm" autocomplete="off">
+      <div id="fIntWrap"></div>
+      <div><label for="fDe">De ce? Ce date susțin alegerea</label><textarea id="fDe"></textarea></div>
+      <div><label>Ce măsurăm după</label><div class="chips" id="fKpi"></div></div>
+      <div style="display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr))">
+        <div><label for="fCand">Când verificăm</label><select id="fCand"><option>după o săptămână</option><option selected>după două săptămâni</option><option>după o lună</option><option>după trei luni</option></select></div>
+        <div><label for="fStop">Renunțăm dacă</label><input type="text" id="fStop"></div>
+      </div>
+      <button class="btn" type="submit" style="align-self:flex-start">Arată fișa de decizie</button>
+    </form>
+    <div class="stack">
+      <div class="panel"><p class="label">Fișa de decizie a echipei</p><dl class="fisa" id="fOut"><dd class="small" style="font-weight:400">Completați formularul și apăsați „Arată fișa de decizie”.</dd></dl></div>
+      <div class="secret-box" data-secret hidden>
+        <p><b>O fișă bună:</b> numește o singură schimbare, se sprijină pe o cifră din Laborator, alege un indicator care se poate mișca în termenul ales și spune dinainte ce rezultat înseamnă „nu a mers”.</p>
+        <p><b>Cum verifici:</b> compară cu perioada dinainte și schimbă un singur lucru o dată. Mai sigur este un test A/B: jumătate dintre vizitatori văd varianta nouă, jumătate pe cea veche, în aceeași perioadă.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 -->
+<section class="screen" data-stage="3" data-title="Ce iei cu tine" data-reveal>
+  <h2>Cinci lucruri pe care le poți face <mark>de mâine</mark></h2>
+  <div class="recap" id="recap"></div>
+  <div class="secret-box">
+    <p><b>Pentru data viitoare:</b> alege trei afaceri digitale pe care le folosești. Pentru fiecare notează: cui vinde (relația), cum încasează (mecanismul de venit), ce canale folosește și la ce indicatori crezi că se uită echipa ei.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="nav">
+  <button class="btn ghost" type="button" id="bPrev" aria-label="Ecranul anterior">← <span>Înapoi</span></button>
+  <button class="btn" type="button" id="bReveal" hidden>Dezvăluie</button>
+  <div class="count" id="count" aria-live="polite"></div>
+  <button class="btn" type="button" id="bNext" aria-label="Ecranul următor"><span>Înainte</span> →</button>
+</footer>
+</div>
+
+<aside id="drawer" hidden aria-label="Note pentru profesor">
+  <div class="row" style="justify-content:space-between"><h3>Note pentru profesor</h3><button class="tbtn" type="button" id="drawerClose">Închide</button></div>
+  <p class="small" id="drawerWhy"></p>
+  <div class="notes" id="drawerBody"></div>
+</aside>
+
+<div id="tipbox" role="tooltip" hidden></div>
+
+<div id="over" hidden role="dialog" aria-label="Cuprins">
+  <div class="row" style="justify-content:space-between"><h2 style="font-size:1.8rem">Cuprins</h2><button class="btn ghost" type="button" id="overClose">Închide</button></div>
+  <div class="toc" id="toc"></div>
+  <div><p class="label" style="margin-bottom:.4rem">Taste</p>
+    <div class="keys">
+      <span><kbd>→</kbd><kbd>Spațiu</kbd> ecranul următor</span><span><kbd>←</kbd> ecranul anterior</span>
+      <span><kbd>R</kbd> dezvăluie sau ascunde răspunsul</span><span><kbd>N</kbd> note pentru profesor</span>
+      <span><kbd>I</kbd> următorul indiciu</span><span><kbd>P</kbd> mod prezentare</span><span><kbd>O</kbd> cuprins</span>
+      <span><kbd>M</kbd> fără animații</span><span><kbd>T</kbd> temă</span>
+      <span><kbd>Home</kbd><kbd>End</kbd> primul și ultimul ecran</span><span><kbd>Esc</kbd> închide sau eliberează un cursor</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+const ERR=[];window.addEventListener('error',e=>ERR.push(String(e.message)));
+document.documentElement.lang='ro';
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const nf=new Intl.NumberFormat('ro-RO',{maximumFractionDigits:0}),nf1=new Intl.NumberFormat('ro-RO',{maximumFractionDigits:1});
+const num=v=>(v<0?'-':'')+nf.format(Math.abs(Math.round(v)));
+const lei=v=>num(v)+' lei';
+const sgn=v=>(v>0?'+':'')+num(v);
+const dec=(v,d=1)=>v.toFixed(d).replace('.',',');
+const pct=(v,d=1)=>dec(v*100,d)+'%';
+const dpc=(a,b)=>{if(!a)return b?'de la zero':'0%';const r=(b-a)/Math.abs(a)*100;return (r>0?'+':'')+dec(r,0)+'%';};
+const kf=v=>Math.abs(v)>=10000?nf1.format(v/1000)+' mii':Math.abs(v)>=1000?nf.format(v):nf1.format(v);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ================= DATE FICTIVE: 12 săptămâni, 4 canale ================= */
+const rep=(v,n=12)=>Array(n).fill(v);
+const PROC=14, FIXW=2500, FIX=FIXW*4;
+const CH=[
+ {id:'cautare',n:'Căutare',l:'Căutare pe Google (neplătită)',ses:[2380,2410,2450,2400,2440,2470,2430,2480,2460,2500,2470,2490],cr:rep(.025),aov:rep(150),mj:rep(.45),mk:rep(0)},
+ {id:'reclame',n:'Reclame',l:'Reclame plătite pe rețele sociale',ses:[790,810,800,820,1600,2400,3000,3400,3800,4000,4100,4000],cr:[.02,.02,.02,.02,.019,.018,.018,.018,.018,.018,.018,.018],aov:[150,150,150,150,118,108,105,105,105,105,105,105],mj:[.45,.45,.45,.45,.33,.31,.31,.31,.31,.31,.31,.31],mk:[600,600,600,600,1500,2600,3300,3800,4200,4200,4200,4200]},
+ {id:'email',n:'Email',l:'Emailul săptămânal către clienți',ses:[600,590,610,600,620,610,630,620,640,630,650,640],cr:rep(.05),aov:rep(165),mj:rep(.45),mk:rep(50)},
+ {id:'direct',n:'Direct',l:'Vizite directe (adresa tastată, favorite)',ses:[900,910,890,900,920,910,930,920,940,930,950,940],cr:rep(.035),aov:rep(155),mj:rep(.45),mk:rep(0)}
+];
+const ALLW=[...Array(12).keys()], WL=ALLW.map(i=>'S'+(i+1));
+const LUNI=[{id:'sep',n:'Septembrie',w:[0,1,2,3]},{id:'oct',n:'Octombrie',w:[4,5,6,7]},{id:'nov',n:'Noiembrie',w:[8,9,10,11]}];
+const ROW={};
+CH.forEach(c=>{ROW[c.id]=ALLW.map(w=>{const com=Math.round(c.ses[w]*c.cr[w]),venit=com*c.aov[w],mb=venit*c.mj[w],proc=com*PROC;return{ses:c.ses[w],com,venit,mb,mk:c.mk[w],proc,contrib:mb-c.mk[w]-proc};});});
+function agg(ws,cs){const a={ses:0,com:0,venit:0,mb:0,mk:0,proc:0,contrib:0};(cs||CH.map(c=>c.id)).forEach(c=>ws.forEach(w=>{const r=ROW[c][w];for(const k in a)a[k]+=r[k];}));a.rez=a.contrib-FIXW*ws.length;return a;}
+const SEP=agg(LUNI[0].w),OCT=agg(LUNI[1].w),NOV=agg(LUNI[2].w);
+const wk=(k,cs)=>ALLW.map(w=>agg([w],cs)[k]);
+
+/* ================= GRAFICE SVG ================= */
+function ticks(lo,hi,n=4){const span=(hi-lo)||1,raw=span/n,p=Math.pow(10,Math.floor(Math.log10(raw))),m=[1,2,2.5,5,10].find(k=>k*p>=raw-1e-9)*p;
+  const bot=Math.floor(lo/m+1e-9)*m,top=Math.ceil(hi/m-1e-9)*m,t=[];for(let v=bot;v<=top+m/2;v+=m)t.push(+v.toFixed(6));return{t,bot,top};}
+const HATCH='<defs><pattern id="hx" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="hatch" x1="0" y1="0" x2="0" y2="6"/></pattern></defs>';
+function frame(o){const W=640,H=o.h||310,L=62,R=o.R??18,T=22,B=o.B??36;const tk=o.fixed?{t:o.fixed.t,bot:o.fixed.bot,top:o.fixed.top}:ticks(o.lo,o.hi);
+  const Y=v=>T+(H-T-B)*(1-(v-tk.bot)/(tk.top-tk.bot));let g='';
+  tk.t.forEach(v=>{g+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${kf(v)}</text>`;});
+  g+=`<line class="axis" x1="${L}" x2="${W-R}" y1="${Y(Math.max(tk.bot,Math.min(0,tk.top)))}" y2="${Y(Math.max(tk.bot,Math.min(0,tk.top)))}"/>`;
+  if(o.unit)g+=`<text x="${L-8}" y="12" text-anchor="end">${o.unit}</text>`;
+  return{W,H,L,R,T,B,Y,g,tk};}
+const wrap=(f,inner,label)=>`<svg viewBox="0 0 ${f.W} ${f.H}" role="img" aria-label="${esc(label||'Grafic')}">${HATCH}${f.g}${inner}</svg>`;
+function mark(k,x,y,c){const r=4.4;if(k===1)return`<rect class="${c}" x="${x-r}" y="${y-r}" width="${2*r}" height="${2*r}"/>`;
+  if(k===2)return`<path class="${c}" d="M${x} ${y-r-1.5}L${x+r+1.5} ${y+r}L${x-r-1.5} ${y+r}Z"/>`;
+  if(k===3)return`<path class="${c}" d="M${x} ${y-r-2}L${x+r+2} ${y}L${x} ${y+r+2}L${x-r-2} ${y}Z"/>`;
+  return`<circle class="${c}" cx="${x}" cy="${y}" r="${r}"/>`;}
+const DASH=['','8 4','2 4','10 3 2 3'];
+function lineChart(o){const all=o.series.flatMap(s=>s.v);const f=frame({lo:Math.min(o.yMin??0,...all),hi:Math.max(...all,1),unit:o.unit,R:o.labels===false?18:92,h:o.h});
+  const n=o.x.length,X=i=>f.L+12+(f.W-f.L-f.R-24)*(n>1?i/(n-1):.5);let s='';
+  o.x.forEach((l,i)=>{s+=`<text x="${X(i)}" y="${f.H-12}" text-anchor="middle">${l}</text>`;});
+  const ends=[];
+  o.series.forEach((se,k)=>{const cls=se.emph===true?' hi':se.emph===false?' dim':'';const st=se.k??k;
+    if(o.join!==false)s+=`<polyline class="ln${cls}" stroke-dasharray="${DASH[st%4]}" points="${se.v.map((v,i)=>X(i)+','+f.Y(v)).join(' ')}"/>`;
+    se.v.forEach((v,i)=>{s+=mark(st%4,X(i),f.Y(v),'pt'+cls);});
+    ends.push({y:f.Y(se.v[n-1]),n:se.n,hi:se.emph===true});});
+  if(o.labels!==false){ends.sort((a,b)=>a.y-b.y);for(let i=1;i<ends.length;i++)if(ends[i].y-ends[i-1].y<15)ends[i].y=ends[i-1].y+15;
+    const over=ends.length?ends[ends.length-1].y-(f.H-f.B):0;if(over>0)ends.forEach(e=>e.y-=over);
+    ends.forEach(e=>{s+=`<text class="${e.hi?'v':''}" x="${f.W-f.R+10}" y="${e.y+4}">${esc(e.n)}</text>`;});}
+  return wrap(f,s,o.label);}
+function barChart(o){const lo=o.yMin??Math.min(0,...o.v);const f=frame({lo,hi:Math.max(...o.v,1),unit:o.unit,h:o.h,fixed:o.fixed});
+  const n=o.v.length,bw=(f.W-f.L-f.R)/n,base=f.Y(Math.max(f.tk.bot,0));let s='';
+  o.v.forEach((v,i)=>{const x=f.L+bw*i+bw*.18,w=bw*.64,y=f.Y(Math.max(v,f.tk.bot)),h=Math.abs(base-y);
+    s+=`<rect class="b${o.hi===i||o.hi==='all'?' hi':''}" x="${x}" y="${Math.min(y,base)}" width="${w}" height="${h}"/>`;
+    if(o.vals!==false)s+=`<text class="v" x="${x+w/2}" y="${Math.min(y,base)-6}" text-anchor="middle">${kf(v)}</text>`;
+    s+=`<text x="${x+w/2}" y="${f.H-12}" text-anchor="middle">${esc(o.cats[i])}</text>`;});
+  if(f.tk.bot>0)s+=`<text x="${f.L+6}" y="${f.H-f.B-6}" class="v">axa pornește de la ${kf(f.tk.bot)}</text>`;
+  return wrap(f,s,o.label);}
+function pieChart(o){const W=640,H=310,cx=W/2,cy=H/2,r=108,tot=o.v.reduce((a,b)=>a+b,0);let a0=-Math.PI/2,s='';
+  o.v.forEach((v,i)=>{const a1=a0+v/tot*2*Math.PI,m=(a0+a1)/2,big=a1-a0>Math.PI?1:0;
+    s+=`<path class="sl s${i%4}" d="M${cx} ${cy}L${cx+r*Math.cos(a0)} ${cy+r*Math.sin(a0)}A${r} ${r} 0 ${big} 1 ${cx+r*Math.cos(a1)} ${cy+r*Math.sin(a1)}Z"/>`;
+    const lx=cx+(r+16)*Math.cos(m),ly=cy+(r+16)*Math.sin(m);
+    s+=`<text class="v" x="${lx}" y="${ly+4}" text-anchor="${Math.cos(m)>.15?'start':Math.cos(m)<-.15?'end':'middle'}">${esc(o.cats[i])} ${dec(v/tot*100,0)}%</text>`;a0=a1;});
+  return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.label||'Diagramă circulară')}">${s}</svg>`;}
+function scatter(o){const xs=o.pts.map(p=>p.x),ys=o.pts.map(p=>p.y);const f=frame({lo:o.yMin??0,hi:Math.max(...ys,1),unit:o.yl,B:50,h:o.h});
+  const tx=ticks(o.xMin??0,Math.max(...xs,1)),X=v=>f.L+(f.W-f.L-f.R)*(v-tx.bot)/(tx.top-tx.bot);let s='';
+  tx.t.forEach(v=>{s+=`<text x="${X(v)}" y="${f.H-f.B+16}" text-anchor="middle">${o.xcat?esc(o.xcat[v]||''):kf(v)}</text>`;});
+  s+=`<text x="${(f.L+f.W-f.R)/2}" y="${f.H-8}" text-anchor="middle">${esc(o.xl)}</text>`;
+  o.pts.forEach(p=>{s+=`<circle class="pt hi" cx="${X(p.x)}" cy="${f.Y(p.y)}" r="5.5"/>`;if(p.l)s+=`<text x="${X(p.x)+8}" y="${f.Y(p.y)-7}">${esc(p.l)}</text>`;});
+  return wrap(f,s,o.label);}
+
+/* ================= COMPONENTE ================= */
+const TAGS={true:'✓ Potrivit',false:'✗ Mai puțin potrivit',null:'◐ Depinde'};
+function quiz(el,opts,onPick){
+  el.innerHTML=opts.map((o,i)=>`<button type="button" class="opt" data-i="${i}" aria-pressed="false"><span class="opt-k">${'ABCDE'[i]}</span><span class="opt-t">${o.t}</span><span class="opt-fb" data-secret hidden><b>${o.tag||TAGS[o.ok===undefined?null:o.ok]}</b>${o.fb}</span></button>`).join('');
+  el.addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;const was=b.getAttribute('aria-pressed')==='true';
+    $$('.opt',el).forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed',was?'false':'true');onPick&&onPick(was?null:+b.dataset.i);});}
+function chipGroup(el,items,onPick,start=0){
+  el.insertAdjacentHTML('beforeend',items.map((t,i)=>`<button type="button" class="chip" data-i="${i}" aria-pressed="${i===start}">${t}</button>`).join(''));
+  el.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;$$('.chip',el).forEach(x=>x.setAttribute('aria-pressed',x===b));onPick(+b.dataset.i);});}
+
+/* ================= ECRAN 2: dilema ================= */
+let dilema=null;
+const DIL=[
+ {t:'Costul reclamelor: cât plătim ca să aducem o comandă',tag:'Ce date ți-ar trebui',fb:'Bugetul de reclame și numărul de comenzi aduse de ele, săptămână cu săptămână.'},
+ {t:'Reducerile: cu cât vindem sub prețul întreg',tag:'Ce date ți-ar trebui',fb:'Valoarea medie a comenzii și marja, separat pentru comenzile cu și fără reducere.'},
+ {t:'Livrarea și ambalarea: cât costă fiecare colet',tag:'Ce date ți-ar trebui',fb:'Costul pe colet și numărul de colete, comparat cu valoarea comenzilor.'},
+ {t:'Produsele vândute: poate cresc cele cu adaos mic',tag:'Ce date ți-ar trebui',fb:'Vânzările și marja pe fiecare produs, înainte și după.'}];
+$('#dilemaNums').innerHTML=`
+ <div><p class="label">Comenzi pe lună</p><p class="big num">${num(SEP.com)} → ${num(NOV.com)}</p><p class="small"><b class="plus">▲ ${dpc(SEP.com,NOV.com)}</b> din septembrie până în noiembrie</p></div>
+ <div><p class="label">Rezultat pe lună</p><p class="big num">${num(SEP.rez)} → ${num(NOV.rez)} <span style="font-size:.4em">lei</span></p><p class="small"><b class="minus">▼ ${dpc(SEP.rez,NOV.rez)}</b> în aceeași perioadă <span class="fictiv">Date fictive</span></p></div>`;
+quiz($('#qDilema'),DIL,i=>{dilema=i;});
+$('#dilemaHint').innerHTML=`<p><b>Un prim indiciu:</b> venitul a crescut cu ${dpc(SEP.venit,NOV.venit)} (de la ${lei(SEP.venit)} la ${lei(NOV.venit)}). Nu vindem mai puțin. Banii se pierd undeva între venit și rezultat.</p><p>Țineți minte ce ați ales. Verificăm în Laborator, la ecranul 16.</p>`;
+
+/* ================= ECRAN 4: clasificare ================= */
+const CLS=[
+ {t:'Plata online cu cardul',z:'ecom',fb:'Face parte din tranzacție: clientul plătește comanda.'},
+ {t:'Coșul și finalizarea comenzii',z:'ecom',fb:'Aici se încheie vânzarea propriu-zisă.'},
+ {t:'Pagina de produs cu preț și buton „Adaugă în coș”',z:'ecom',fb:'Este vitrina în care clientul alege ce cumpără.'},
+ {t:'Scăderea automată a stocului după comandă',z:'ebiz',fb:'Clientul nu o vede, dar fără ea vinzi produse pe care nu le mai ai. Dacă stocul apare în timp real pe pagina de produs, procesul atinge și vânzarea.'},
+ {t:'Gestionarea relației cu clientul (CRM, Customer Relationship Management): istoricul comenzilor și al discuțiilor',z:'ebiz',fb:'Începe înainte de vânzare și continuă mult după ea.'},
+ {t:'Comanda automată către producător când stocul scade',z:'ebiz',fb:'Este aprovizionare: o relație cu furnizorul, nu cu clientul.'},
+ {t:'Raportul săptămânal de vânzări',z:'ebiz',fb:'Folosește datele vânzării, dar servește deciziilor echipei.'},
+ {t:'Răspunsul la întrebările clienților pe chat',z:'ebiz',fb:'Este suport. S-ar schimba dacă prin chat s-ar prelua comenzi și plăți: atunci chatul devine canal de vânzare.'}];
+const clsPos=CLS.map(()=>'pool');let clsSel=null;
+const ZEL={pool:$('#clsPool'),ecom:$('#zEcom'),ebiz:$('#zEbiz')};
+function clsRender(check){
+  Object.values(ZEL).forEach(z=>z.innerHTML='');
+  CLS.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='chip';b.draggable=true;b.dataset.i=i;b.textContent=c.t;
+    b.setAttribute('aria-pressed',clsSel===i);
+    if(check&&clsPos[i]!=='pool'){const ok=clsPos[i]===c.z;b.classList.add(ok?'ok':'bad');b.textContent=(ok?'✓ ':'✗ ')+c.t;}
+    ZEL[clsPos[i]].appendChild(b);});
+  if(check){const placed=clsPos.filter(p=>p!=='pool').length,good=CLS.filter((c,i)=>clsPos[i]===c.z).length;
+    $('#clsFb').innerHTML=`<p><b>${good} din ${CLS.length} la locul lor</b>${placed<CLS.length?' ('+(CLS.length-placed)+' neclasificate)':''}. Tot ce stă în eCommerce stă și în eBusiness: de aceea zona mică este desenată în interiorul celei mari.</p><ul class="fb-list">`+
+     CLS.map((c,i)=>`<li><b>${clsPos[i]==='pool'?'○':clsPos[i]===c.z?'✓':'✗'} ${esc(c.t)} → ${c.z==='ecom'?'eCommerce':'restul eBusiness'}</b>${c.fb}</li>`).join('')+'</ul>';}}
+function clsMove(i,z){if(i==null||!ZEL[z])return;clsPos[i]=z;clsSel=null;clsRender(state[3]&&state[3].rev);}
+const s4=$$('.screen')[3];
+s4.addEventListener('click',e=>{const chip=e.target.closest('.chip[data-i]');
+  if(chip){const i=+chip.dataset.i;clsSel=clsSel===i?null:i;clsRender(state[3].rev);const again=$(`.chip[data-i="${i}"]`,s4);again&&again.focus();return;}
+  const z=e.target.closest('[data-zone]');if(z&&clsSel!=null)clsMove(clsSel,z.dataset.zone);});
+s4.addEventListener('keydown',e=>{const chip=e.target.closest('.chip[data-i]');if(!chip)return;const m={'1':'ecom','2':'ebiz','0':'pool'}[e.key];if(m){e.preventDefault();clsMove(+chip.dataset.i,m);}});
+s4.addEventListener('dragstart',e=>{const chip=e.target.closest('.chip[data-i]');if(chip){e.dataTransfer.setData('text/plain',chip.dataset.i);e.dataTransfer.effectAllowed='move';}});
+s4.addEventListener('dragover',e=>{const z=e.target.closest('[data-zone]');if(z){e.preventDefault();$$('[data-zone]',s4).forEach(x=>x.classList.toggle('over',x===z));}});
+s4.addEventListener('dragend',()=>$$('[data-zone]',s4).forEach(x=>x.classList.remove('over')));
+s4.addEventListener('drop',e=>{const z=e.target.closest('[data-zone]');if(!z)return;e.preventDefault();$$('[data-zone]',s4).forEach(x=>x.classList.remove('over'));const i=e.dataTransfer.getData('text/plain');if(i!=='')clsMove(+i,z.dataset.zone);});
+$('#clsReset').addEventListener('click',e=>{e.stopPropagation();clsPos.fill('pool');clsSel=null;clsRender(state[3].rev);});
+
+/* ================= ECRAN 5: relație × mecanism ================= */
+const REL=[{k:'B2C',n:'firmă către consumator',d:'Business-to-Consumer: firma vinde persoanelor. Comenzi multe, valori mici, contează experiența de cumpărare.'},
+ {k:'B2B',n:'firmă către firmă',d:'Business-to-Business: firma vinde altor firme. Comenzi rare, valori mari, contracte și relații de durată.'},
+ {k:'C2C',n:'consumator către consumator',d:'Consumer-to-Consumer: persoanele vând între ele, de obicei printr-o platformă care le pune în legătură și construiește încrederea (recenzii, calificative).'},
+ {k:'B2G / G2B',n:'firmă și stat',d:'Business-to-Government: firma vinde statului, prin proceduri reglementate. Government-to-Business: statul oferă firmei servicii digitale, cum sunt declarațiile online sau e-Factura.'}];
+const MEC=[{n:'Vânzare directă',d:'Încasezi prețul produsului.'},{n:'Abonament',d:'Încasezi o sumă fixă, repetat.'},{n:'Comision',d:'Oprești un procent din vânzarea altcuiva.'},{n:'Publicitate',d:'Altcineva plătește ca să ajungă la publicul tău.'}];
+const COMBO=[
+ ['Cămara vinde un borcan de dulceață unui client din Galați și încasează prețul lui.','Cutia lunară Cămara: patru borcane surpriză pentru 119 lei pe lună.','Cămara listează și borcanele altor producători și oprește 15% din fiecare vânzare.','Blogul de rețete al Cămării adună cititori, iar un producător de borcane plătește pentru un banner.'],
+ ['Cămara livrează 200 de borcane unei cafenele, cu factură și preț de en-gros.','Un hotel primește aprovizionare săptămânală contra unei sume lunare fixe.','Cămara pune în legătură producători și restaurante și primește un procent din fiecare comandă.','Producătorii plătesc pentru a apărea primii în catalogul destinat restaurantelor.'],
+ ['O persoană vinde alteia borcane din cămara proprie, printr-un anunț. Banii ajung la vânzător; platforma nu câștigă nimic din tranzacție.','O platformă de anunțuri pe care vânzătorii frecvenți plătesc un abonament lunar.','O platformă pe care gospodarii vând între ei, iar platforma oprește un procent din fiecare tranzacție.','O platformă gratuită de anunțuri care câștigă din anunțurile promovate.'],
+ ['Cămara câștigă o achiziție publică și livrează gemuri unei cantine, prin sistemul electronic de achiziții publice.','Un contract anual de furnizare lunară către o instituție publică.','Rar întâlnit. Un exemplu: o firmă care procesează online plata taxelor locale și primește un comision pe tranzacție.','Aproape inexistent: statul nu cumpără prin reclame. Nu orice pereche are sens, iar asta arată că cele două axe sunt independente.']];
+let relI=0,mecI=0;
+function comboRender(){$('#comboOut').innerHTML=`<p class="label">${REL[relI].k} + ${MEC[mecI].n}</p><p style="font-size:1.25rem;font-weight:600">${COMBO[relI][mecI]}</p><p class="small"><b>Relația:</b> ${REL[relI].d}</p><p class="small"><b>Mecanismul:</b> ${MEC[mecI].d}</p>`;}
+chipGroup($('#relChips'),REL.map(r=>`${r.k} <span style="font-weight:400">${r.n}</span>`),i=>{relI=i;comboRender();});
+chipGroup($('#mecChips'),MEC.map(m=>m.n),i=>{mecI=i;comboRender();});
+
+/* ================= ECRAN 6: harta ================= */
+const MAP=[
+ {n:'Atragere',z:'eBusiness',ce:'Omul află de Cămara: caută pe Google, vede o reclamă, primește un email sau o recomandare.',date:'Sursa vizitei, costul reclamei, cuvintele căutate.',ind:'Costul pe vizită și CAC (costul de achiziție a clientului) = cost de marketing ÷ clienți noi.'},
+ {n:'Site',z:'eCommerce',ce:'Răsfoiește, compară produse, citește recenzii.',date:'Paginile văzute, timpul petrecut, produsele puse în coș.',ind:'Rata de conversie = comenzi ÷ vizite. Rata de respingere = vizite care pleacă după o singură pagină.'},
+ {n:'Comandă',z:'eCommerce',ce:'Clientul confirmă coșul și lasă datele de livrare.',date:'Produsele, valoarea, adresa, codul de reducere folosit.',ind:'AOV (valoarea medie a comenzii) și rata de abandon a coșului.'},
+ {n:'Plată',z:'eCommerce',ce:'Procesatorul de plăți verifică și încasează banii.',date:'Metoda de plată, plățile eșuate, comisionul procesatorului.',ind:'Rata plăților reușite.'},
+ {n:'Stoc',z:'eBusiness',ce:'Stocul scade automat. Sub un prag, pleacă o comandă către producător.',date:'Cantitățile, loturile, termenele de valabilitate.',ind:'Produse lipsă din stoc și zile de stoc rămase.'},
+ {n:'Livrare',z:'eBusiness',ce:'Coletul este ambalat și predat curierului.',date:'Numărul de urmărire al coletului (AWB), durata, costul, retururile.',ind:'Livrări la timp și costul de livrare pe comandă.'},
+ {n:'Suport',z:'eBusiness',ce:'Clientul întreabă, reclamă sau lasă o recenzie.',date:'Întrebările, reclamațiile, notele din recenzii.',ind:'Timpul de răspuns și rata de revenire = clienți care comandă din nou.'}];
+let mapI=0,mapT=null;
+$('#map').innerHTML=MAP.map((m,i)=>`<button type="button" class="node" data-i="${i}" aria-pressed="${i===0}">${m.n}<small>${m.z}</small></button>`).join('');
+function mapSel(i){mapI=i;$$('.node').forEach((n,k)=>n.setAttribute('aria-pressed',k===i));const m=MAP[i];
+  $('#mapOut').innerHTML=`<div class="facts"><div><p class="label">Ce se întâmplă</p><p>${m.ce}</p></div><div><p class="label">Ce date apar</p><p>${m.date}</p></div><div><p class="label">Indicator util</p><p>${m.ind}</p></div></div>`;}
+function mapStop(){clearInterval(mapT);mapT=null;$('#mapPlay').textContent='▶ Urmărește comanda #1042';}
+$('#map').addEventListener('click',e=>{const b=e.target.closest('.node');if(b){mapStop();mapSel(+b.dataset.i);}});
+$('#mapPlay').addEventListener('click',()=>{if(mapT){mapStop();return;}mapSel(0);$('#mapPlay').textContent='■ Oprește';
+  mapT=setInterval(()=>{if(mapI>=MAP.length-1){mapStop();return;}mapSel(mapI+1);},1600);});
+
+/* ================= ECRAN 7: canale ================= */
+const JR=[
+ {w:'Luni · telefon',t:'Vede pe Instagram o reclamă la zacusca Cămării. Intră pe site, pune două borcane în coș și iese.',sep:['','Nimic deosebit, deocamdată.'],int:['','Coșul se salvează în contul ei.']},
+ {w:'Miercuri · laptop',t:'Primește emailul săptămânal și intră din nou pe site.',sep:['bad','✗ Coșul de pe telefon a dispărut. Caută din nou produsele.'],int:['good','✓ Coșul o așteaptă, cu aceleași produse.']},
+ {w:'Miercuri · laptop',t:'Comandă și plătește cu cardul.',sep:['bad','✗ Reclama de pe Instagram îi arată în continuare zacusca deja cumpărată.'],int:['good','✓ Reclama se oprește pentru ea. Bugetul merge spre cine nu a cumpărat.']},
+ {w:'Vineri · chat',t:'Întreabă unde este coletul.',sep:['bad','✗ Suportul nu vede comanda. Îi cere din nou numele și numărul comenzii.'],int:['good','✓ Suportul vede comanda și numărul de urmărire și răspunde într-un minut.']}];
+let omInt=false;
+function jrRender(){$('#journey').innerHTML=JR.map(j=>{const s=omInt?j.int:j.sep;return`<li><span class="when">${j.w}</span><p>${j.t}</p><p class="st ${s[0]}">${s[1]}</p></li>`;}).join('');
+  $('#omSep').setAttribute('aria-pressed',!omInt);$('#omInt').setAttribute('aria-pressed',omInt);}
+$('#omSep').addEventListener('click',()=>{omInt=false;jrRender();});$('#omInt').addEventListener('click',()=>{omInt=true;jrRender();});
+quiz($('#qAttr'),[
+ {t:'Instagram: de acolo a aflat',tag:'Regula „primul contact”',fb:'Utilă când vrei să știi ce canal aduce oameni noi.'},
+ {t:'Email: de acolo a venit când a cumpărat',tag:'Regula „ultimul clic”',fb:'Este regula din multe rapoarte și din Laboratorul nostru. Favorizează canalele de la finalul drumului.'},
+ {t:'Amândurora, pe jumătate',tag:'Atribuire împărțită',fb:'Mai aproape de realitate, dar cere date unificate despre client.'},
+ {t:'Niciunuia: ar fi cumpărat oricum',tag:'Posibil',fb:'Rapoartele nu pot arăta asta. Doar un test cu un grup care nu vede reclama poate.'}]);
+
+/* ================= ECRAN 8: pâlnie ================= */
+const FN=[{n:'intră pe site',r:1},{n:'deschid o pagină de produs',r:.58},{n:'pun ceva în coș',r:.11},{n:'comandă',r:SEP.com/SEP.ses}];
+quiz($('#qFunnel'),[{t:'Aproximativ 3',ok:true,fb:''},{t:'Aproximativ 10',ok:false,fb:''},{t:'Aproximativ 25',ok:false,fb:''},{t:'Aproximativ 50',ok:false,fb:''}]);
+$$('#qFunnel .opt-fb').forEach(e=>{e.lastChild&&e.lastChild.nodeType===3&&e.lastChild.remove();});
+function funnelRender(rev){$('#funnel').innerHTML=FN.map((f,i)=>`<div class="fstep${!rev&&i>0?' q':''}"><div class="fbar" data-w="${f.r*100}"></div><div class="fline"><b>${rev||i===0?dec(f.r*100,f.r<.1?1:0):'?'}</b><span>din 100 ${f.n}</span>${rev||i===0?`<span class="small">${num(SEP.ses*f.r)} pe lună în septembrie</span>`:''}</div></div>`).join('');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>$$('#funnel .fbar').forEach(b=>{b.style.width=b.dataset.w+'%';})));
+  const ab=1-FN[3].r/FN[2].r;
+  $('#funnelFb').innerHTML=`<p><b>Rata de conversie a Cămării: ${pct(FN[3].r)}.</b> Din 100 de vizite ies cam 3 comenzi. Cifra depinde mult de produs, preț și de unde vin vizitatorii, deci compar-o cu propria lună trecută, nu cu alt magazin.</p><p><b>Cea mai mare pierdere:</b> între coș și comandă. Rata de abandon a coșului este ${pct(ab,0)}: din 11 coșuri pornite se finalizează cam 3.</p><p class="small"><span class="fictiv">Date fictive</span> Pașii intermediari (58 și 11) sunt ipoteze ale exercițiului.</p>`;}
+
+/* ================= ECRAN 9: decizii și indicatori ================= */
+const IND=['Venitul total','CAC față de marja pe comandă','AOV: valoarea medie a comenzii','Rata de abandon a coșului'];
+const DEC=[
+ {q:'Dublăm bugetul de reclame?',a:1,fb:'Reclama merită doar dacă aducerea unui client costă mai puțin decât câștigi din comanda lui. S-ar schimba dacă mulți clienți revin: atunci poți accepta o pierdere la prima comandă.'},
+ {q:'Oferim transport gratuit peste 200 de lei?',a:2,fb:'Trebuie să știi câte comenzi sunt acum sub prag și cu cât. Dacă AOV este deja peste 200, pragul doar îți mănâncă din marjă.'},
+ {q:'Refacem pagina de finalizare a comenzii?',a:3,fb:'Dacă puțini abandonează coșul, problema este în altă parte: la trafic sau la pagina de produs.'}];
+const decPick=DEC.map(()=>null);
+$('#decs').innerHTML=DEC.map((d,k)=>`<div class="dec" data-k="${k}"><h3>${d.q}</h3><div class="chips">${IND.map((t,i)=>`<button type="button" class="chip" data-i="${i}" aria-pressed="false">${t}</button>`).join('')}</div><p class="opt-fb" data-secret hidden><b>✓ ${IND[d.a]}</b>${d.fb}${d.a!==0?' Venitul total nu ajută aici: crește și atunci când pierzi bani la fiecare comandă.':''}</p></div>`).join('');
+$('#decs').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;const box=b.closest('.dec');$$('.chip',box).forEach(x=>x.setAttribute('aria-pressed',x===b));decPick[+box.dataset.k]=+b.dataset.i;decMark(state[8].rev);});
+function decMark(rev){$$('#decs .dec').forEach((box,k)=>$$('.chip',box).forEach((c,i)=>{c.classList.toggle('ok',rev&&i===DEC[k].a);c.classList.toggle('bad',rev&&decPick[k]===i&&i!==DEC[k].a);}));}
+
+/* ================= ECRAN 10: simulator ================= */
+function calc(s){const com=s.trafic*s.conv,venit=com*s.aov,mb=venit*s.marja,cogs=venit-mb,proc=com*PROC,rez=mb-s.buget-proc-FIX;return{com,venit,mb,cogs,proc,rez};}
+const preset=a=>({trafic:a.ses,conv:a.com/a.ses,aov:a.venit/a.com,marja:a.mb/a.venit,buget:a.mk});
+const PRE={sep:preset(SEP),nov:preset(NOV)};
+const SL=[
+ {k:'trafic',n:'Trafic',u:'vizite pe lună',min:5000,max:60000,step:500,f:1,show:v=>num(v)},
+ {k:'conv',n:'Rata de conversie',u:'comenzi din 100 de vizite',min:.5,max:6,step:.1,f:100,show:v=>dec(v*100,2)+'%'},
+ {k:'aov',n:'Valoarea medie a comenzii',u:'lei',min:60,max:300,step:5,f:1,show:v=>dec(v,0)+' lei'},
+ {k:'marja',n:'Marja brută',u:'cât rămâne din preț după costul mărfii',min:15,max:65,step:1,f:100,show:v=>dec(v*100,1)+'%'},
+ {k:'buget',n:'Buget de marketing',u:'lei pe lună',min:0,max:30000,step:500,f:1,show:v=>lei(v)}];
+let sim={...PRE.nov};
+const MIS=[
+ ['Adu rezultatul din noiembrie cel puțin la nivelul din septembrie ('+lei(SEP.rez)+').',r=>r.rez>=SEP.rez-.01],
+ ['Reușește asta păstrând traficul și bugetul din noiembrie.',r=>r.rez>=SEP.rez-.01&&Math.abs(sim.trafic-PRE.nov.trafic)<1&&Math.abs(sim.buget-PRE.nov.buget)<1],
+ ['Găsește pragul de rentabilitate: un rezultat între -500 și +500 de lei.',r=>Math.abs(r.rez)<=500]];
+$('#simCtl').innerHTML=SL.map(s=>`<div class="ctl"><label for="sl_${s.k}">${s.n} <span class="small">${s.u}</span></label><output id="o_${s.k}" for="sl_${s.k}"></output><input type="range" id="sl_${s.k}" data-k="${s.k}" min="${s.min}" max="${s.max}" step="${s.step}"></div>`).join('');
+function simSet(p){sim={...p};SL.forEach(s=>{$('#sl_'+s.k).value=Math.round(sim[s.k]*s.f/s.step)*s.step;});simRender();}
+function simRender(){const r=calc(sim);SL.forEach(s=>{$('#o_'+s.k).textContent=s.show(sim[s.k]);});
+  $('#simKpi').innerHTML=`<div class="kpi"><span class="label">Comenzi</span><div class="kpi-v">${num(r.com)}</div></div>
+   <div class="kpi"><span class="label">Venit</span><div class="kpi-v" style="color:var(--accent)">${lei(r.venit)}</div><span class="small">ce încasezi</span></div>
+   <div class="kpi"><span class="label">Rezultat simplificat</span><div class="kpi-v ${r.rez<0?'minus':'plus'}">${r.rez<0?'▼ ':'▲ '}${lei(r.rez)}</div><span class="small">${r.rez<0?'pierdere':'ce rămâne'} după costuri</span></div>`;
+  const steps=[['Venit',r.venit,'venit'],['Costul mărfii',-r.cogs,'cost'],['Marketing',-sim.buget,'cost'],['Ambalare, livrare',-r.proc,'cost'],['Costuri fixe',-FIX,'cost'],['Rezultat',r.rez,r.rez<0?'neg':'pos']];
+  const top=[25e3,5e4,1e5,2e5,4e5,8e5,12e5].find(v=>v>=r.venit)||12e5,lo=r.rez<0?-Math.ceil(-r.rez/(top/4))*(top/4):0;
+  const t=[];for(let v=lo;v<=top+1;v+=top/4)t.push(v);
+  const f=frame({fixed:{t,bot:lo,top},unit:'lei',h:300,B:40});const bw=(f.W-f.L-f.R)/steps.length;let run=0,s='';
+  steps.forEach((st,i)=>{const last=i===steps.length-1,a=last?0:run,b=last?st[1]:run+st[1];if(!last)run=b;
+    const y0=f.Y(Math.max(a,b)),h=Math.max(Math.abs(f.Y(a)-f.Y(b)),1.5),x=f.L+bw*i+bw*.14,w=bw*.72;
+    s+=`<rect class="b ${st[2]}" x="${x}" y="${y0}" width="${w}" height="${h}"/>`;
+    if(st[2]==='cost')s+=`<rect fill="url(#hx)" x="${x}" y="${y0}" width="${w}" height="${h}"/>`;
+    if(!last)s+=`<line class="conn" x1="${x+w}" x2="${x+bw}" y1="${f.Y(b)}" y2="${f.Y(b)}"/>`;
+    s+=`<text class="v" x="${x+w/2}" y="${y0-6}" text-anchor="middle">${(st[1]<0?'-':'')+kf(Math.abs(st[1]))}</text>`;
+    const words=st[0].split(', ');words.forEach((wd,j)=>{s+=`<text x="${x+w/2}" y="${f.H-22+j*13}" text-anchor="middle">${wd}</text>`;});});
+  $('#simChart').innerHTML=wrap(f,s,'De la venit la rezultat');
+  const parts=[['Costul mărfii',r.cogs,'p-cogs'],['Marketing',sim.buget,'p-mk'],['Ambalare și livrare',r.proc,'p-proc'],['Costuri fixe',FIX,'p-fix'],['Rezultat',Math.max(r.rez,0),'p-rez']];
+  const tot=parts.reduce((a,p)=>a+p[1],0)||1;
+  $('#simStrip').innerHTML=parts.map(p=>`<i class="${p[2]}" style="width:${p[1]/tot*100}%"></i>`).join('');
+  $('#stripT').textContent=r.rez<0?`Din 100 de lei încasați, costurile cer ${dec((r.venit-r.rez)/r.venit*100,0)} de lei`:'Din 100 de lei încasați';
+  $('#simLegend').innerHTML=parts.map(p=>`<span><i class="sw ${p[2]}"></i>${p[0]} <b class="num">${dec(p[1]/(r.venit||1)*100,0)}</b></span>`).join('');
+  $('#simMis').innerHTML=MIS.map(m=>{const d=m[1](r);return`<li class="${d?'done':''}"><span>${d?'✓':'○'}</span><span>${m[0]}</span></li>`;}).join('');
+  $$('[data-preset]').forEach(b=>b.setAttribute('aria-pressed',SL.every(s=>Math.abs(sim[s.k]-PRE[b.dataset.preset][s.k])<1e-9)));}
+$('#simCtl').addEventListener('input',e=>{const s=SL.find(x=>x.k===e.target.dataset.k);if(!s)return;sim[s.k]=+e.target.value/s.f;simRender();});
+$$('[data-preset]').forEach(b=>b.addEventListener('click',()=>simSet(PRE[b.dataset.preset])));
+$('#simReset').addEventListener('click',()=>simSet(PRE.nov));
+
+/* ================= ECRAN 11: pârghii ================= */
+const LEV=[
+ {t:'+10% trafic, cu același buget',m:s=>({...s,trafic:s.trafic*1.1})},
+ {t:'+10% la rata de conversie',m:s=>({...s,conv:s.conv*1.1})},
+ {t:'+10% la valoarea medie a comenzii',m:s=>({...s,aov:s.aov*1.1})},
+ {t:'+3 puncte procentuale la marjă',m:s=>({...s,marja:s.marja+.03})},
+ {t:'-10% din bugetul de marketing, fără să pierdem comenzi',m:s=>({...s,buget:s.buget*.9})}];
+const base=calc(PRE.nov).rez;LEV.forEach(l=>{l.d=calc(l.m(PRE.nov)).rez-base;});
+const levMax=Math.max(...LEV.map(l=>l.d)),levBest=LEV.findIndex(l=>l.d===levMax);
+quiz($('#qLever'),LEV.map((l,i)=>({t:l.t,ok:i===levBest?true:null,tag:i===levBest?'✓ Cel mai mare efect aici':'◐ Efect mai mic aici',fb:sgn(l.d)+' lei pe lună'})));
+function leverRender(){const sorted=LEV.map((l,i)=>({...l,i})).sort((a,b)=>b.d-a.d);
+  $('#leverBars').innerHTML=sorted.map(l=>`<div class="hbar"><span>${'ABCDE'[l.i]}. ${l.t}</span><div class="track"><div class="fill" data-w="${Math.max(l.d,0)/levMax*100}"></div></div><b>${sgn(l.d)} lei</b></div>`).join('');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>$$('#leverBars .fill').forEach(b=>{b.style.width=b.dataset.w+'%';})));
+  $('#leverFb').innerHTML=`<p><b>Traficul și conversia dau exact același efect:</b> ambele aduc cu 10% mai multe comenzi, iar fiecare comandă în plus trebuie ambalată și livrată.</p><p><b>Valoarea medie a comenzii le bate pe amândouă:</b> aduce același venit în plus fără niciun colet în plus.</p><p>Ordinea nu este o lege. Depinde de punctul de plecare: cu o marjă mai mare sau un buget mai mic, clasamentul se schimbă. Verificați în simulator, pornind din septembrie.</p>`;}
+
+/* ================= ECRAN 12: alegerea vizualizării ================= */
+const VT=['Linie','Bare','Circular','Puncte (dispersie)'];
+const novCh=CH.map(c=>agg(LUNI[2].w,[c.id]).venit);
+const VIZ=[
+ {q:'Cum au evoluat vânzările în 12 săptămâni?',cap:'Venit pe săptămână, toate canalele',unit:'lei',best:0,
+  r:[()=>lineChart({series:[{n:'Venit',v:wk('venit'),emph:true}],x:WL,unit:'lei',labels:false}),
+     ()=>barChart({cats:WL,v:wk('venit'),unit:'lei',vals:false,hi:'all'}),
+     ()=>pieChart({cats:WL,v:wk('venit')}),
+     ()=>lineChart({series:[{n:'Venit',v:wk('venit'),emph:true}],x:WL,unit:'lei',labels:false,join:false})],
+  v:[[true,'Linia leagă săptămânile între ele, iar ochiul vede imediat direcția și momentul în care panta se schimbă (S5).'],
+     [null,'Se poate citi, dar 12 bare cer comparații una câte una. Barele devin alegerea bună când perioadele sunt puține sau vrei valori exacte.'],
+     [false,'Feliile arată părți dintr-un întreg. Timpul nu este un întreg împărțit în felii, iar ordinea săptămânilor se pierde.'],
+     [null,'Punctele sunt la locul lor, dar fără linie tendința trebuie ghicită.']]},
+ {q:'Ce canal a adus cel mai mult venit în noiembrie?',cap:'Venit pe canal, noiembrie',unit:'lei',best:1,
+  r:[()=>lineChart({series:[{n:'Venit',v:novCh,emph:true}],x:CH.map(c=>c.n),unit:'lei',labels:false}),
+     ()=>barChart({cats:CH.map(c=>c.n),v:novCh,unit:'lei',hi:'all'}),
+     ()=>pieChart({cats:CH.map(c=>c.n),v:novCh}),
+     ()=>scatter({pts:novCh.map((v,i)=>({x:i,y:v,l:CH[i].n})),xl:'canal',yl:'lei',xcat:{},xMin:0})],
+  v:[[false,'Linia sugerează că între Căutare și Reclame există ceva „la mijloc”. Canalele sunt categorii separate, fără ordine.'],
+     [true,'Barele pornesc de la aceeași bază, deci lungimile se compară direct. Ar merge și mai bine ordonate descrescător.'],
+     [null,'Arată cota fiecărui canal din total. Cu patru felii încă se citește, dar două felii apropiate (Email și Direct) sunt greu de comparat.'],
+     [false,'Graficul cu puncte cere două variabile numerice. Aici avem una singură, deci axa orizontală nu spune nimic.']]},
+ {q:'Există o legătură între bugetul de reclame și comenzi?',cap:'Buget de reclame și comenzi, pe săptămâni',unit:'',best:3,
+  r:[()=>lineChart({series:[{n:'Buget (lei)',v:wk('mk',['reclame']),emph:true},{n:'Comenzi',v:wk('com')}],x:WL,unit:'lei și comenzi'}),
+     ()=>barChart({cats:WL,v:wk('com'),unit:'comenzi',vals:false,hi:'all'}),
+     ()=>pieChart({cats:WL,v:wk('com')}),
+     ()=>scatter({pts:ALLW.map(w=>({x:ROW.reclame[w].mk,y:agg([w]).com,l:WL[w]})),xl:'buget de reclame pe săptămână (lei)',yl:'comenzi',yMin:100,xMin:0})],
+  v:[[false,'Două mărimi cu unități diferite pe aceeași axă: comenzile par o linie plată lângă lei. Relația dintre ele nu se vede.'],
+     [false,'Arată doar comenzile. A doua variabilă, bugetul, lipsește cu totul.'],
+     [false,'Nu există un întreg de împărțit și nici a doua variabilă.'],
+     [true,'Fiecare punct este o săptămână: bugetul pe orizontală, comenzile pe verticală. Norul urcă, deci cele două cresc împreună. Atenție: graficul arată o legătură, nu o cauză.']]}];
+let vq=0,vt=null;
+function vizRender(){const V=VIZ[vq];$$('#vizType .chip').forEach((c,i)=>c.setAttribute('aria-pressed',i===vt));
+  $('#vizCap').innerHTML=`${V.cap} <span>${V.q} <span class="fictiv">Date fictive</span></span>`;
+  if(vt==null){$('#vizChart').innerHTML='<p class="small" style="padding:3rem 1rem;text-align:center">Votați în sală, apoi alegeți un tip de grafic.</p>';$('#vizVerdict').innerHTML='';return;}
+  $('#vizChart').innerHTML=V.r[vt]();const v=V.v[vt];
+  $('#vizVerdict').innerHTML=`<b>${v[0]===true?'✓ Ajută':v[0]===false?'✗ Încurcă':'◐ Merge, cu rezerve'}</b>${v[1]}`;}
+chipGroup($('#vizTask'),VIZ.map(v=>v.q),i=>{vq=i;vt=null;vizRender();});
+chipGroup($('#vizType'),VT,i=>{vt=i;vizRender();},-1);
+
+/* ================= ECRAN 13: axa trunchiată ================= */
+const MCOM=[SEP.com,OCT.com,NOV.com];
+quiz($('#qAxis'),[{t:'S-au triplat sau mai mult',ok:false,fb:'Așa arată barele, dar nu așa spun cifrele.'},{t:'S-au dublat',ok:false,fb:'Tot desenul vorbește, nu datele.'},{t:'Au crescut cu mai puțin de jumătate',ok:true,fb:`De la ${num(SEP.com)} la ${num(NOV.com)}: ${dpc(SEP.com,NOV.com)}.`},{t:'Au rămas aproape la fel',ok:false,fb:'O creștere de peste 40% nu este „la fel”. Nici exagerarea inversă nu ajută.'}]);
+function axRender(){const st=+$('#axStart').value;$('#axOut').textContent=num(st)+' comenzi';
+  const top=800,t=[];const step=(top-st)/4;for(let i=0;i<=4;i++)t.push(st+step*i);
+  $('#axChart').innerHTML=barChart({cats:LUNI.map(m=>m.n),v:MCOM,fixed:{t,bot:st,top},hi:2,unit:'comenzi',vals:state[13]&&state[13].rev});
+  const vis=(NOV.com-st)/(SEP.com-st);
+  $('#axFb').innerHTML=`<p><b>Pe desen:</b> bara din noiembrie este de ${dec(vis,1)} ori mai înaltă decât cea din septembrie. <b>În realitate:</b> comenzile au crescut de ${dec(NOV.com/SEP.com,2)} ori (${dpc(SEP.com,NOV.com)}).</p><p>${st===0?'Cu axa pornită de la zero, înălțimea barelor spune adevărul.':'Trage cursorul spre zero și urmărește cum se apropie cele două cifre.'}</p><p class="small">La bare, lungimea este mesajul, deci axa pornește de la zero. La un grafic cu linie, o axă care nu pornește de la zero poate fi acceptabilă, dacă este marcată clar.</p>`;}
+$('#axStart').addEventListener('input',axRender);
+
+/* ================= ECRAN 14: tipuri de analiză ================= */
+const AN=[
+ {n:'Descriptivă',q:'Ce s-a întâmplat?',ex:`„În noiembrie am avut ${num(NOV.com)} comenzi și un rezultat de ${lei(NOV.rez)}.”`,cu:'Rapoarte și tablouri de bord. Aici lucrează majoritatea firmelor mici.'},
+ {n:'Diagnostică',q:'De ce s-a întâmplat?',ex:'„De ce a scăzut rezultatul, deși comenzile au crescut?” Răspunsul îl căutăm în Laborator.',cu:'Filtrări și comparații: pe canale, pe perioade, pe produse.'},
+ {n:'Predictivă',q:'Ce se va întâmpla?',ex:'„Dacă nu schimbăm nimic, ce rezultat vom avea în decembrie?”',cu:'Tendințe și modele de prognoză. Orice predicție vine cu o marjă de eroare.'},
+ {n:'Prescriptivă',q:'Ce ar trebui să facem?',ex:'„Ce buget de reclame ne aduce cel mai bun rezultat?”',cu:'Simulări, teste și recomandări automate. Simulatorul de la ecranul 10 este o versiune în miniatură.'}];
+function anRender(i){$('#anOut').innerHTML=`<p class="label">Analiza ${AN[i].n.toLowerCase()}</p><p class="big" style="font-size:clamp(1.6rem,3vw,2.6rem)">${AN[i].q}</p><p style="font-size:1.1rem">${AN[i].ex}</p><p class="small"><b>Cu ce se face:</b> ${AN[i].cu}</p>`;}
+chipGroup($('#anSteps'),AN.map((a,i)=>`${i+1}. ${a.n} <span style="font-weight:400">${a.q}</span>`),anRender);
+quiz($('#qAn'),[{t:'Descriptivă',ok:false,fb:'Ar descrie ce s-a întâmplat deja.'},{t:'Diagnostică',ok:false,fb:'Ar explica o cauză.'},{t:'Predictivă',ok:true,fb:'Estimează viitorul pe baza trecutului. Ar deveni prescriptivă dacă ar spune și ce să facem.'},{t:'Prescriptivă',ok:false,fb:'Ar recomanda o acțiune.'}]);
+
+/* ================= ECRAN 15: laborator ================= */
+const lab={per:'all',ch:'all',met:'com'};
+const MET={com:['Comenzi','comenzi pe săptămână','comenzi'],venit:['Venit','lei pe săptămână','lei'],contrib:['Contribuție','lei pe săptămână, după marketing și livrare','lei']};
+function labBtns(el,items,key){el.insertAdjacentHTML('beforeend',items.map(([v,t])=>`<button type="button" class="chip" data-v="${v}" aria-pressed="${lab[key]===v}">${t}</button>`).join(''));
+  el.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;lab[key]=b.dataset.v;$$('.chip',el).forEach(x=>x.setAttribute('aria-pressed',x===b));labRender();});}
+labBtns($('#labPer'),[['all','Toate'],...LUNI.map(m=>[m.id,m.n])],'per');
+labBtns($('#labCh'),[['all','Toate'],...CH.map(c=>[c.id,c.n])],'ch');
+labBtns($('#labMet'),Object.entries(MET).map(([k,v])=>[k,v[0]]),'met');
+function labRender(){const mi=LUNI.findIndex(m=>m.id===lab.per),ws=mi<0?ALLW:LUNI[mi].w,cs=lab.ch==='all'?null:[lab.ch];
+  const a=agg(ws,cs),p=mi>0?agg(LUNI[mi-1].w,cs):null,all=lab.ch==='all';
+  const d=(k)=>p?`<span class="small">${dpc(p[k],a[k])} față de ${LUNI[mi-1].n.toLowerCase()}</span>`:'';
+  const last=all?['Rezultat','rez','după costurile fixe']:['Contribuție','contrib','fără costurile fixe'];
+  $('#labKpi').innerHTML=[['Comenzi','com',num],['Venit','venit',lei],['Marketing','mk',lei]].map(k=>`<div class="kpi"><span class="label">${k[0]}</span><div class="kpi-v">${k[2](a[k[1]])}</div>${d(k[1])}</div>`).join('')+
+   `<div class="kpi"><span class="label">${last[0]}</span><div class="kpi-v ${a[last[1]]<0?'minus':''}">${a[last[1]]<0?'▼ ':''}${lei(a[last[1]])}</div>${d(last[1])||`<span class="small">${last[2]}</span>`}</div>`;
+  $('#labCap').textContent=MET[lab.met][1]+(all?'':' · evidențiat: '+CH.find(c=>c.id===lab.ch).n);
+  $('#labChart').innerHTML=lineChart({series:CH.map((c,k)=>({n:c.n,k,v:ws.map(w=>ROW[c.id][w][lab.met]),emph:all?undefined:c.id===lab.ch})),x:ws.map(w=>WL[w]),unit:MET[lab.met][2],h:300});
+  $('#labTable').innerHTML='<thead><tr><th>Canal</th><th>Vizite</th><th>Comenzi</th><th>Conversie</th><th>AOV</th><th>Marjă</th><th>Marketing pe comandă</th><th>Contribuție pe comandă</th></tr></thead><tbody>'+
+   CH.map(c=>{const r=agg(ws,[c.id]);return`<tr class="${lab.ch===c.id?'sel':''}"><td title="${esc(c.l)}">${c.n}</td><td>${num(r.ses)}</td><td>${num(r.com)}</td><td>${pct(r.com/r.ses)}</td><td>${dec(r.venit/r.com,0)} lei</td><td>${pct(r.mb/r.venit,0)}</td><td>${dec(r.mk/r.com,1)} lei</td><td class="${r.contrib<0?'minus':''}">${dec(r.contrib/r.com,1)} lei</td></tr>`;}).join('')+'</tbody>';}
+
+/* ================= ECRAN 16: observație / ipoteză ================= */
+const rS=agg(LUNI[0].w,['reclame']),rN=agg(LUNI[2].w,['reclame']),eN=agg(LUNI[2].w,['email']);
+const STM=[
+ {t:`Comenzile venite din Reclame au crescut de la ${num(rS.com)} la ${num(rN.com)} pe lună.`,o:true,fb:'Se citește direct din tabel.'},
+ {t:`Pe canalul Reclame, valoarea medie a comenzii a scăzut de la ${dec(rS.venit/rS.com,0)} la ${dec(rN.venit/rN.com,0)} lei.`,o:true,fb:'Este o cifră măsurată. De ce a scăzut este deja altă întrebare.'},
+ {t:'Clienții aduși de reclame cumpără doar când primesc o reducere.',o:false,fb:'Sună plauzibil, dar datele nu arată ce ar fi făcut fără reducere. Se poate testa: o săptămână de reclame fără cod de reducere.'},
+ {t:`În noiembrie, marketingul costă ${dec(rN.mk/rN.com,0)} lei pe comandă la Reclame și ${dec(eN.mk/eN.com,1)} lei la Email.`,o:true,fb:'Două împărțiri pe date existente.'},
+ {t:'În săptămânile cu buget mai mare de reclame avem mai multe comenzi, deci reclamele au adus comenzile.',o:false,fb:'Prima jumătate este o observație (o corelație). „Deci” o transformă în ipoteză: în aceeași perioadă a pornit și reducerea de 20%, iar toamna se caută oricum mai multă zacuscă.'},
+ {t:'Dacă oprim reducerea, comenzile din reclame vor scădea la jumătate.',o:false,fb:'Este o predicție. Devine observație abia după ce încerci.'}];
+const stmPick=STM.map(()=>null);
+$('#stms').innerHTML=STM.map((s,k)=>`<div class="stm" data-k="${k}"><p>${s.t}</p><div class="chips"><button type="button" class="chip" data-v="1" aria-pressed="false">Observație</button><button type="button" class="chip" data-v="0" aria-pressed="false">Ipoteză</button></div><p class="opt-fb" data-secret hidden><b>${s.o?'Observație':'Ipoteză'}</b>${s.fb}</p></div>`).join('');
+$('#stms').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;const box=b.closest('.stm');$$('.chip',box).forEach(x=>x.setAttribute('aria-pressed',x===b));stmPick[+box.dataset.k]=b.dataset.v==='1';stmMark(state[16].rev);});
+function stmMark(rev){$$('#stms .stm').forEach((box,k)=>$$('.chip',box).forEach(c=>{const isO=c.dataset.v==='1';c.classList.toggle('ok',rev&&isO===STM[k].o);c.classList.toggle('bad',rev&&stmPick[k]===isO&&isO!==STM[k].o);}));
+  if(!rev)return;const good=STM.filter((s,k)=>stmPick[k]===s.o).length,ans=stmPick.filter(x=>x!==null).length;
+  $('#verdict').innerHTML=`<p><b>${ans?good+' din '+STM.length+' corecte. ':''}Ce arată datele despre dilema de la început:</b> în noiembrie, o comandă din Reclame aduce ${dec(rN.contrib/rN.com,0)} lei contribuție, față de ${sgn(rS.contrib/rS.com)} lei în septembrie. Am mărit de ${dec(rN.mk/rS.mk,0)} ori bugetul unui canal care abia se susținea, iar reducerea i-a tăiat marja de la ${pct(rS.mb/rS.venit,0)} la ${pct(rN.mb/rN.venit,0)}.</p>
+   <p>${dilema==null?'La ecranul 2 nu a fost aleasă nicio variantă.':'La ecranul 2 ați ales varianta '+'ABCD'[dilema]+'. '+['Costul reclamelor este o parte din răspuns: a urcat de la '+dec(rS.mk/rS.com,0)+' la '+dec(rN.mk/rN.com,0)+' lei pe comandă.','Reducerile sunt o parte din răspuns: marja și valoarea comenzii au scăzut pe canalul Reclame.','Costul pe colet a rămas 14 lei, dar apasă mai greu pe o comandă de 105 lei decât pe una de 150.','Parțial: coșurile din reclame sunt mai mici, însă cauza principală este în altă parte.'][dilema]}</p>
+   <p>Costul reclamelor și reducerea au lucrat împreună. Cât cântărește fiecare rămâne o ipoteză până la un test.</p>`;}
+
+/* ================= ECRAN 11: nicio pârghie nu este gratis ================= */
+const oN={ses:NOV.ses-rN.ses,com:NOV.com-rN.com,venit:NOV.venit-rN.venit,mb:NOV.mb-rN.mb,mk:NOV.mk-rN.mk};
+const RED0=.20,MFULL=(rN.mb/rN.venit)*(1-RED0)+RED0;
+const TOG=[
+ {k:'rapid',n:'Livrare în 24 de ore',d:'aduce: +10% conversie · costă: +7 lei la fiecare comandă',conv:1.10,ord:7},
+ {k:'pachet',n:'Pachete cadou',d:'aduce: +12% la valoarea comenzii · costă: +5 lei ambalaj la fiecare comandă',aov:1.12,ord:5},
+ {k:'chat',n:'Om de suport pe chat',d:'aduce: +8% conversie · costă: +2.000 lei pe lună, fix',conv:1.08,fix:2000}];
+const TC0={buget:rN.mk,red:RED0,rapid:false,pachet:false,chat:false};
+let tc={...TC0};
+function tcCalc(d){let cf=1,af=1,ord=PROC,fix=FIX;TOG.forEach(t=>{if(d[t.k]){cf*=t.conv||1;af*=t.aov||1;ord+=t.ord||0;fix+=t.fix||0;}});
+  const pv=rN.ses*Math.sqrt(d.buget/rN.mk),pc=rN.com/rN.ses*(1+1.5*(d.red-RED0))*cf,pa=rN.venit/rN.com*(1-d.red)/(1-RED0)*af,pm=(MFULL-d.red)/(1-d.red);
+  const comP=pv*pc,comO=oN.ses*(oN.com/oN.ses)*cf,oa=oN.venit/oN.com*af,com=comP+comO;
+  const venit=comP*pa+comO*oa,mb=comP*pa*pm+comO*oa*(oN.mb/oN.venit),cost=d.buget+oN.mk+com*ord+fix;
+  return{com,venit,mb,cost,rez:mb-cost};}
+const TCS=[{k:'buget',n:'Buget de reclame',u:'mai mult buget aduce vizite, dar tot mai puține la fiecare leu',min:0,max:30000,step:200,f:1,show:v=>lei(v)},
+ {k:'red',n:'Reducere în reclame',u:'aduce comenzi, dar taie din preț și din marjă',min:0,max:30,step:1,f:100,show:v=>dec(v*100,0)+'%'}];
+$('#tcCtl').innerHTML=TCS.map(c=>`<div class="ctl"><label for="tc_${c.k}">${c.n} <span class="small">${c.u}</span></label><output id="tco_${c.k}" for="tc_${c.k}"></output><input type="range" id="tc_${c.k}" data-k="${c.k}" min="${c.min}" max="${c.max}" step="${c.step}"></div>`).join('');
+$('#tcTog').innerHTML=TOG.map(t=>`<button type="button" class="tog" data-k="${t.k}" aria-pressed="false"><span class="box"></span><b>${t.n}</b><span class="small">${t.d}</span></button>`).join('');
+function tcSet(d){tc={...d};TCS.forEach(c=>{$('#tc_'+c.k).value=Math.round(tc[c.k]*c.f/c.step)*c.step;});tcRender();}
+function tcRender(){const r=tcCalc(tc),b=tcCalc(TC0),dr=r.rez-b.rez;
+  TCS.forEach(c=>{$('#tco_'+c.k).textContent=c.show(tc[c.k]);});
+  $$('#tcTog .tog').forEach(t=>{const on=tc[t.dataset.k];t.setAttribute('aria-pressed',on);$('.box',t).textContent=on?'✓':'';});
+  $('#tcKpi').innerHTML=`<div class="kpi"><span class="label">Comenzi</span><div class="kpi-v">${num(r.com)}</div><span class="small">${sgn(r.com-b.com)} față de noiembrie</span></div>
+   <div class="kpi"><span class="label">Venit</span><div class="kpi-v" style="color:var(--accent)">${lei(r.venit)}</div><span class="small">${sgn(r.venit-b.venit)} lei</span></div>
+   <div class="kpi"><span class="label">Rezultat simplificat</span><div class="kpi-v ${r.rez<0?'minus':'plus'}">${r.rez<0?'▼ ':'▲ '}${lei(r.rez)}</div><span class="small"><b class="${dr<-.5?'minus':dr>.5?'plus':''}">${Math.abs(dr)<.5?'la fel ca în noiembrie':sgn(dr)+' lei față de noiembrie'}</b></span></div>`;
+  const pts=[];for(let B=0;B<=30000;B+=500)pts.push({B,y:tcCalc({...tc,buget:B}).rez});
+  const best=pts.reduce((a,p)=>p.y>a.y?p:a,pts[0]);
+  const f=frame({lo:Math.min(0,...pts.map(p=>p.y)),hi:Math.max(...pts.map(p=>p.y),1),unit:'lei',h:250,B:48});
+  const X=B=>f.L+(f.W-f.L-f.R)*B/30000;let sv='';
+  [0,10000,20000,30000].forEach(B=>{sv+=`<text x="${X(B)}" y="${f.H-f.B+16}" text-anchor="${B===30000?'end':B===0?'start':'middle'}">${kf(B)}</text>`;});
+  sv+=`<text x="${(f.L+f.W-f.R)/2}" y="${f.H-8}" text-anchor="middle">buget de reclame pe lună (lei)</text>`;
+  sv+=`<polyline class="ln hi" points="${pts.map(p=>X(p.B)+','+f.Y(p.y)).join(' ')}"/>`;
+  sv+=`<line class="best" x1="${X(best.B)}" x2="${X(best.B)}" y1="${f.T}" y2="${f.H-f.B}"/><text class="v" x="${X(best.B)+6}" y="${f.H-f.B-8}">vârf: ${kf(best.B)} lei buget</text>`;
+  sv+=`<circle class="now" cx="${X(tc.buget)}" cy="${f.Y(r.rez)}" r="7"/><text class="v" x="${X(tc.buget)}" y="${f.Y(r.rez)-12}" text-anchor="${tc.buget>24000?'end':'middle'}">acum</text>`;
+  $('#tcChart').innerHTML=wrap(f,sv,'Rezultatul în funcție de bugetul de reclame');
+  const rows=[];const one=(name,k)=>{const w=tcCalc({...tc,[k]:TC0[k]});rows.push([name,r.com-w.com,r.mb-w.mb,r.cost-w.cost,r.rez-w.rez]);};
+  if(tc.buget!==TC0.buget)one(`Buget de reclame ${lei(tc.buget)} (era ${lei(TC0.buget)})`,'buget');
+  if(Math.abs(tc.red-TC0.red)>1e-9)one(`Reducere ${dec(tc.red*100,0)}% (era ${dec(TC0.red*100,0)}%)`,'red');
+  TOG.forEach(t=>{if(tc[t.k])one(t.n,t.k);});
+  $('#tcTable').innerHTML='<thead><tr><th>Decizia</th><th>Comenzi</th><th>Aduce (marjă brută)</th><th>Costă</th><th>Net</th></tr></thead><tbody>'+
+   (rows.length?rows.map(x=>`<tr><td>${x[0]}</td><td>${sgn(x[1])}</td><td>${sgn(x[2])} lei</td><td>${sgn(x[3])} lei</td><td class="${x[4]<0?'minus':'plus'}"><b>${x[4]<0?'▼ ':'▲ '}${sgn(x[4])} lei</b></td></tr>`).join(''):'<tr><td colspan="5" style="font-family:var(--body);font-weight:400">Nicio schimbare față de noiembrie. Mișcă un cursor sau pornește o decizie.</td></tr>')+'</tbody>';}
+$('#tcCtl').addEventListener('input',e=>{const c=TCS.find(x=>x.k===e.target.dataset.k);if(!c)return;tc[c.k]=+e.target.value/c.f;tcRender();});
+$('#tcTog').addEventListener('click',e=>{const t=e.target.closest('.tog');if(!t)return;tc[t.dataset.k]=!tc[t.dataset.k];tcRender();});
+$('#tcReset').addEventListener('click',()=>tcSet(TC0));
+
+/* ================= ECRAN 17: provocarea ================= */
+const INTV=['Oprim codul de reducere de 20% din reclame','Coborâm bugetul de reclame la nivelul din septembrie','Mutăm o parte din buget spre emailul către clienții existenți','Transport gratuit doar pentru comenzi peste 200 de lei','Altă idee a echipei (scrieți-o la „De ce”)'];
+const FK=['Rata de conversie','Valoarea medie a comenzii','Marja brută','Marketing pe comandă','Contribuția pe comandă','Rata de abandon a coșului','Clienți care revin','Rezultatul lunar'];
+let fMea=false;const fPick=new Set();
+function fMode(m){fMea=m;$('#fmCam').setAttribute('aria-pressed',!m);$('#fmMea').setAttribute('aria-pressed',m);
+  $('#fmHint').textContent=m?'Fără cifre confidențiale: scrieți direcții („crește”, „scade”, „mai mare decât luna trecută”).':'Folosiți cifrele din Laborator (ecranul 16).';
+  const keep=$('#fInt')?$('#fInt').value:'';
+  $('#fIntWrap').innerHTML=m?'<label for="fInt">Intervenția pentru afacerea mea</label><input type="text" id="fInt" placeholder="o singură schimbare, formulată concret">':'<label for="fInt">Intervenția aleasă</label><select id="fInt">'+INTV.map(t=>`<option>${t}</option>`).join('')+'</select>';
+  if(m&&keep&&!INTV.includes(keep))$('#fInt').value=keep;
+  $('#fDe').placeholder=m?'ex.: comenzile cresc, dar marja pe comandă scade':'ex.: contribuția pe comandă din Reclame este negativă în noiembrie';
+  $('#fStop').placeholder=m?'ex.: indicatorul nu se mișcă deloc':'ex.: comenzile totale scad cu peste 25%';}
+$('#fKpi').innerHTML=FK.map((t,i)=>`<button type="button" class="chip" data-i="${i}" aria-pressed="false">${t}</button>`).join('');
+$('#fKpi').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;const i=+b.dataset.i;fPick.has(i)?fPick.delete(i):fPick.add(i);b.setAttribute('aria-pressed',fPick.has(i));});
+$('#fmCam').addEventListener('click',()=>fMode(false));$('#fmMea').addEventListener('click',()=>fMode(true));
+function fisa(){const v=id=>$('#'+id).value.trim();const rows=[['Decizia',v('fInt')],['Pentru că',v('fDe')],['Măsurăm',[...fPick].sort().map(i=>FK[i]).join(', ')],['Verificăm',v('fCand')],['Renunțăm dacă',v('fStop')]];
+  $('#fOut').innerHTML=rows.map(r=>`<div><dt>${r[0]}</dt><dd class="${r[1]?'':'empty'}">${r[1]?esc(r[1]):'lipsește: fără acest rând nu puteți ști dacă a mers'}</dd></div>`).join('')+(fMea?'<p class="small">Fișă pentru afacerea proprie. Rămâne doar în acest browser.</p>':'');}
+$('#fForm').addEventListener('submit',e=>{e.preventDefault();fisa();});
+
+/* ================= ECRAN 18: recapitulare ================= */
+$('#recap').innerHTML=[
+ ['Explică diferența dintre eBusiness și eCommerce printr-un exemplu.','Plata cu cardul este eCommerce. Scăderea automată a stocului după plată este eBusiness, dar nu eCommerce. Tot ce este eCommerce este și eBusiness.'],
+ ['Descrie procesele digitale ale unei afaceri.','Atragere, site, comandă, plată, stoc, livrare, suport. Fiecare etapă lasă date și are un indicator al ei.'],
+ ['Alege indicatorul potrivit unei decizii.','Pornește de la decizie, nu de la cifră. Pentru bugetul de reclame: costul de achiziție față de marja pe comandă, nu venitul total.'],
+ ['Citește un grafic și recunoaște unul înșelător.','Linie pentru evoluție, bare pentru comparații, puncte pentru relații. La bare, verifică dacă axa pornește de la zero.'],
+ ['Propune o acțiune și un mod de a o verifica.','O singură schimbare, un indicator, un termen și un prag la care renunți. O corelație este un motiv să testezi, nu o dovadă.']
+].map((r,i)=>`<details><summary>${i+1}. ${r[0]}</summary><p>${r[1]}</p></details>`).join('');
+
+/* ================= NOTE PENTRU PROFESOR ================= */
+const NOTES=[
+ {m:2,s:'Stabilește rolul: studenții sunt echipa magazinului, nu public.',p:['Prezintă magazinul în două fraze și bonul de comandă (150 lei, valoarea medie din septembrie).','Spune explicit că toate cifrele sunt fictive.'],q:['Cine are deja o afacere sau vinde ceva online?','Ce ați vrea să puteți decide mai bine până la final?'],
+  x:['Ipoteze de construcție: magazin și date fictive; 12 săptămâni (septembrie-noiembrie), 4 canale; ambalare și livrare 14 lei pe comandă; costuri fixe 2.500 lei pe săptămână; canalul unei comenzi = ultimul clic.','Statisticile din prezentarea originală (randamentul emailului, numărul de utilizatori ai rețelelor, cotele tipurilor de date) nu au putut fi verificate și au fost omise.','Fără sistem de vot: votul se face cu mâna ridicată, iar profesorul apasă pe varianta majorității.','Ajutoare pentru studenți pe fiecare ecran: termenii subliniați punctat au explicație la trecerea cu mouse-ul sau la atingere; „Indiciu” (tasta I) dă pe rând câte un pas de gândire, fără să dea răspunsul; „Citește mai mult” din josul ecranului este material opțional, bun și pentru recapitulare acasă.']},
+ {m:5,s:'Creează o întrebare la care lecția răspunde abia la ecranele 16-17.',p:['Vot cu mâna ridicată pe A-D. Notează scorul pe tablă.','Apasă pe varianta majorității (se reține și apare la ecranul 17).','R arată ce date ar cere fiecare variantă și un prim indiciu. Nu da verdictul acum.'],q:['Ce cifră ai cere prima de la contabil sau din platformă?','Se poate ca mai multe variante să fie adevărate simultan?']},
+ {m:4,s:'eCommerce este inclus în eBusiness.',p:['Vot da / nu la întrebarea din ecran.','R construiește mulțimea mare în jurul celei mici.'],q:['Dați un exemplu de proces digital pe care clientul nu îl vede niciodată.','Antreprenorii din sală: ce proces din spate faceți încă manual?']},
+ {m:5,s:'Aplică distincția pe procese concrete.',p:['Lucru în perechi 2 minute, apoi un student vine la laptop sau dictează.','Alternativă fără drag: clic pe proces, apoi clic pe zonă.','R verifică și afișează explicația pentru fiecare proces.'],q:['Care proces a stârnit dezbatere? De ce?','În ce condiții chatul ar deveni eCommerce?']},
+ {m:5,s:'Separă relația dintre participanți de mecanismul de venit.',p:['Combină pe rând câteva perechi. Lasă sala să propună combinații.','Arată perechea B2G + publicitate: nu orice combinație are sens.','R după întrebarea despre abonament.'],q:['Afacerea ta (sau una cunoscută): ce relație, ce mecanism?','Poate o firmă să aibă două mecanisme de venit simultan?']},
+ {m:5,s:'Fiecare etapă a comenzii produce date și are un indicator.',p:['Pornește animația comenzii #1042, apoi lasă sala să aleagă etape.','La fiecare etapă întreabă: eCommerce sau doar eBusiness?'],q:['În ce etapă credeți că pierde Cămara cei mai mulți clienți?','Ce etapă lipsește din hartă pentru afacerea voastră?']},
+ {m:4,s:'Canalele au valoare când împart aceleași date despre client.',p:['Parcurge povestea cu „Canale separate”, apoi comută pe „integrate”.','Vot pe întrebarea de atribuire, apoi R: fiecare răspuns corespunde unei reguli.'],q:['Ați pățit ceva asemănător ca și clienți?','De ce contează regula de atribuire când împarți bugetul?']},
+ {m:4,s:'Rata de conversie și locul unde se pierd clienții.',p:['Pornește de la întrebarea de sub titlu: fiecare numără în gând de la câte din 10 magazine a cumpărat.','Eliminare cu sala: la 50 din 100 ar cumpăra fiecare al doilea curios, la 25 fiecare al patrulea. Nici un magazin fizic nu vinde așa. Rămân A și B: aici este dezbaterea.','Vot A-D, apoi R construiește pâlnia treaptă cu treaptă.'],q:['Unde ați interveni întâi: sus sau jos în pâlnie?','Ce ar putea explica abandonul coșului?']},
+ {m:5,s:'Indicatorul se alege pornind de la decizie.',p:['Pentru fiecare decizie, sala alege un indicator; apasă pe varianta majorității.','R marchează răspunsurile și explică de ce venitul total păcălește.'],q:['Ce indicator urmăriți deja? Ce decizie ați schimbat din cauza lui?']},
+ {m:6,s:'Venitul nu este profit; fiecare pârghie are un cost.',p:['Arată „Septembrie”, apoi „Noiembrie”: venit mai mare, rezultat mai mic.','Provocare pe echipe: cele trei misiuni de sub cursoare se bifează singure când sunt îndeplinite. A doua este cea grea.','Deschide „Formule, costuri incluse și limite” și discută ce lipsește din model.','Când un cursor are focus, săgețile îl mișcă; Esc îl eliberează.'],q:['De ce nu putem mișca în realitate traficul fără buget?','Ce cost important lipsește din model pentru afacerea voastră?']},
+ {m:6,s:'Fiecare pârghie are un cost; după un punct, costul depășește câștigul.',p:['Mișcă doar bugetul de reclame: sala urmărește curba și spune unde este vârful.','Scoate reducerea de 20% și arată că vârful se mută.','Pornește pe rând livrarea rapidă, pachetele și chatul. Înainte de fiecare, vot: aduce mai mult decât costă?','Citește rândurile din tabel: ce aduce, ce costă, net.'],q:['De ce al doilea leu băgat în reclame aduce mai puțin decât primul?','Ce decizie din afacerea voastră pare gratuită, dar are un cost ascuns?','În ce condiții chatul de suport și-ar scoate banii?'],x:['Legăturile dintre decizii și efecte (cu cât crește conversia la o reducere, cât aduce un chat) sunt ipoteze ale exercițiului, listate în „Citește mai mult”. Într-o afacere reală se află doar prin test.']},
+ {m:4,s:'Aceeași creștere procentuală are efecte diferite.',p:['Vot A-E înainte de R.','R arată barele sortate și explicația.'],q:['De ce traficul și conversia dau același efect?','Cum crești valoarea medie a comenzii fără reduceri?']},
+ {m:5,s:'Graficul se alege după întrebare.',p:['Pentru fiecare dintre cele trei întrebări: vot, apoi încearcă întâi o alegere greșită ca să se vadă de ce încurcă.','La a treia întrebare subliniază: legătură nu înseamnă cauză (revine la ecranul 17).'],q:['Ce grafic vedeți cel mai des folosit greșit?']},
+ {m:3,s:'Recunoaște o axă trunchiată.',p:['Graficul pornește înșelător (axa de la 450). Vot.','R afișează valorile și cursorul; trage spre zero.'],q:['Unde ați văzut astfel de grafice? Cine avea interes să exagereze?']},
+ {m:4,s:'Patru întrebări în ordine crescătoare a dificultății.',p:['Parcurge cele patru trepte.','Vot la întrebarea de clasificare, apoi R.'],q:['La ce treaptă se oprește afacerea voastră acum?']},
+ {m:7,s:'Investigație ghidată: de ce a scăzut rezultatul.',p:['Echipe de 3-4, cinci minute. Un student operează filtrele la cererea sălii.','Indiciu, dacă se blochează: comparați septembrie cu noiembrie pe fiecare canal, coloana „Contribuție pe comandă”.','Cere fiecărei echipe o observație cu cifră, nu o explicație.'],q:['Ce canal arată cel mai diferit în noiembrie?','Ce cifră v-a surprins?']},
+ {m:5,s:'Separă observația de ipoteză; corelația nu este cauză.',p:['Vot pe fiecare afirmație; apasă pe varianta majorității.','R arată răspunsurile, verdictul pentru dilema de la ecranul 2 și varianta aleasă atunci.'],q:['Cum ați testa ipoteza despre reducere?','Ce altceva s-a mai schimbat toamna și ar putea explica mai multe comenzi?']},
+ {m:8,s:'Decizie argumentată cu date și plan de verificare.',p:['Echipe, cinci minute. Completează fișa pentru una sau două echipe, la proiector.','Antreprenorii pot folosi „Pentru afacerea mea”: fără cifre confidențiale.','R arată criteriile unei fișe bune și ideea de test A/B.','Textele rămân doar în browser, nu se trimit nicăieri.'],q:['Ce rezultat v-ar face să renunțați? De ce contează să îl spuneți dinainte?','Ce risc are intervenția aleasă?']},
+ {m:3,s:'Verificarea criteriilor de reușită.',p:['Pune fiecare întrebare sălii, apoi deschide răspunsul. R le deschide pe toate.','Anunță tema pentru data viitoare.'],q:['Ce veți face diferit săptămâna aceasta în afacerea sau proiectul vostru?']}];
+
+
+/* ================= AJUTOARE: tooltip, indicii, citește mai mult ================= */
+const GLOS=[
+ ['eCommerce','eCommerce','Comerț electronic: cumpărarea și vânzarea online, cu tot cu plată. Este o parte din eBusiness.'],
+ ['eBusiness','eBusiness','Afacere electronică: tehnologia digitală folosită în toate procesele firmei, nu doar la vânzare.'],
+ ['B2C','B2C','Business-to-Consumer: firma vinde persoanelor.'],
+ ['B2B','B2B','Business-to-Business: firma vinde altor firme.'],
+ ['C2C','C2C','Consumer-to-Consumer: persoanele vând între ele, de obicei printr-o platformă.'],
+ ['B2G','B2G','Business-to-Government: firma vinde statului.'],
+ ['G2B','G2B','Government-to-Business: statul oferă firmei servicii digitale.'],
+ ['CRM','CRM','Customer Relationship Management: programul în care ții istoricul fiecărui client: comenzi, discuții, preferințe.'],
+ ['KPI','KPI','Key Performance Indicator: indicator-cheie de performanță, o cifră urmărită pentru că îți schimbă deciziile.'],
+ ['AOV|[Vv]aloarea medie a comenzii','AOV, valoarea medie a comenzii','Average Order Value = venit ÷ număr de comenzi.'],
+ ['CAC','CAC','Customer Acquisition Cost, costul de achiziție a clientului = cost de marketing ÷ clienți noi.'],
+ ['ROAS','ROAS','Return on Ad Spend, randamentul reclamelor = venit din reclame ÷ costul reclamelor.'],
+ ['AWB','AWB','Numărul de urmărire al coletului, dat de curier.'],
+ ['[Rr]at[ae] de abandon a coșului','Rata de abandon a coșului','Coșuri pornite care nu ajung comenzi ÷ coșuri pornite.'],
+ ['[Rr]at[ae] de respingere','Rata de respingere','În engleză bounce rate: partea din vizite care pleacă după o singură pagină.'],
+ ['[Rr]at[ae] de revenire','Rata de revenire','Partea din clienți care comandă din nou.'],
+ ['[Rr]at[ae] de conversie|[Cc]onversi[ae]','Rata de conversie','Comenzi ÷ vizite. La 2,9%, din 100 de vizite ies cam 3 comenzi.'],
+ ['[Rr]ezultat(?:ul)? simplificat','Rezultat simplificat','Venit minus costul mărfii, marketing, ambalare și livrare, costuri fixe. Nu este profit contabil: lipsesc taxele și retururile.'],
+ ['[Mm]arj[aăe](?: brută)?','Marja brută','Partea din preț care rămâne după costul mărfii. La 45%, dintr-un borcan de 20 de lei rămân 9 lei.'],
+ ['[Cc]ontribuți[ae]','Contribuția','Marja brută minus marketing, minus ambalare și livrare. Arată ce aduce un canal înainte de costurile fixe.'],
+ ['[Cc]osturi(?:le)? fixe','Costuri fixe','Cheltuieli care nu depind de numărul de comenzi: chirie, salarii, abonamente. În exercițiu: 10.000 de lei pe lună.'],
+ ['[Oo]mnichannel','Omnichannel','Toate canalele (site, reclame, email, suport) lucrează cu aceleași date despre client.'],
+ ['[Tt]est(?:ul)? A/B','Test A/B','Jumătate dintre vizitatori văd varianta nouă, jumătate pe cea veche, în aceeași perioadă. Diferența dintre grupuri arată efectul schimbării.'],
+ ['ultimul clic','Ultimul clic','Regulă de atribuire: vânzarea se trece în dreptul ultimului canal prin care a venit clientul înainte să comande.'],
+ ['[Aa]tribuire','Atribuire','Regula după care decizi cărui canal îi aparține o vânzare.'],
+ ['[Cc]orelați[ae]','Corelație','Două mărimi care se mișcă împreună. Nu spune care o cauzează pe cealaltă și nici dacă există o a treia cauză.'],
+ ['en-gros','En-gros','Vânzare în cantități mari către alte firme, la preț mai mic pe bucată.'],
+ ['e-Factura','e-Factura','Sistemul național prin care firmele transmit facturile în format electronic.']];
+const GRE=new RegExp('(?<![\\p{L}\\d])('+GLOS.map(g=>g[0]).join('|')+')(?![\\p{L}\\d-])','gu');
+const GONE=GLOS.map(g=>new RegExp('^(?:'+g[0]+')$','u'));
+const SKIP='.tip,button,svg,select,textarea,input,option,h1,h2,summary,code,kbd,script,style,.ticket,#glosar';
+function tipify(root){const seen=new Set($$('.tip',root).map(e=>e.dataset.g));
+  const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];
+  while(tw.nextNode()){const n=tw.currentNode;if(n.nodeValue.trim().length>2&&n.parentElement&&!n.parentElement.closest(SKIP))nodes.push(n);}
+  nodes.forEach(n=>{const txt=n.nodeValue;GRE.lastIndex=0;let m,last=0,frag=null;
+    while((m=GRE.exec(txt))){const gi=GONE.findIndex(r=>r.test(m[1]));if(gi<0||seen.has(String(gi)))continue;seen.add(String(gi));
+      frag=frag||document.createDocumentFragment();frag.appendChild(document.createTextNode(txt.slice(last,m.index)));
+      const sp=document.createElement('span');sp.className='tip';sp.tabIndex=0;sp.dataset.g=gi;sp.setAttribute('aria-describedby','tipbox');sp.textContent=m[1];frag.appendChild(sp);last=m.index+m[1].length;}
+    if(frag){frag.appendChild(document.createTextNode(txt.slice(last)));n.parentNode.replaceChild(frag,n);}});}
+const tipbox=$('#tipbox');let tipEl=null;
+function tipShow(el){tipEl=el;const g=GLOS[+el.dataset.g];tipbox.innerHTML=`<b>${g[1]}</b>${g[2]}`;tipbox.hidden=false;
+  const r=el.getBoundingClientRect(),w=tipbox.offsetWidth,h=tipbox.offsetHeight,vw=document.documentElement.clientWidth,vh=document.documentElement.clientHeight;
+  tipbox.style.left=Math.max(16,Math.min(r.left,vw-w-16))+'px';tipbox.style.top=(r.bottom+8+h>vh?Math.max(8,r.top-h-8):r.bottom+8)+'px';}
+function tipHide(){tipEl=null;tipbox.hidden=true;}
+document.addEventListener('mouseover',e=>{const t=e.target.closest&&e.target.closest('.tip');if(t)tipShow(t);});
+document.addEventListener('mouseout',e=>{if(e.target.closest&&e.target.closest('.tip'))tipHide();});
+document.addEventListener('focusin',e=>{const t=e.target.closest&&e.target.closest('.tip');if(t)tipShow(t);});
+document.addEventListener('focusout',e=>{if(e.target.closest&&e.target.closest('.tip'))tipHide();});
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.tip');if(!t){tipHide();return;}if(tipEl===t&&e.detail>0&&!matchMedia('(hover:hover)').matches){tipHide();return;}tipShow(t);});
+
+const HINTS={
+ 1:['Rezultatul este venitul minus costurile. Venitul a crescut sau a scăzut?','Care costuri cresc automat odată cu numărul de comenzi și care cresc doar dacă decidem noi?','Gândește-te ce s-ar fi putut schimba între septembrie și noiembrie ca să apară atât de multe comenzi noi.'],
+ 2:['Ce se întâmplă după ce clientul apasă „Plătește”? Cine află că a plecat un borcan din raft?','Numără procesele de care are nevoie Cămara și pe care clientul nu le vede niciodată.'],
+ 3:['Întrebare de control: vede clientul acest pas în timp ce cumpără?','Dacă pasul face parte din alegerea produsului, din comandă sau din plată, este eCommerce.','Tot ce servește firma în spate (stoc, furnizori, rapoarte, suport) este eBusiness, dar nu eCommerce.'],
+ 4:['Păstrează „Abonament” și schimbă doar relația. Mai are sens exemplul?','Relația răspunde la „cui vând?”. Mecanismul răspunde la „cum încasez?”.'],
+ 5:['Pentru fiecare etapă întreabă: ce s-ar strica în afacere dacă nu am avea datele de aici?','Etapele pe care clientul le vede sunt eCommerce. Restul sunt eBusiness.'],
+ 6:['Nu există un singur răspuns corect. Întreabă-te ce regulă ar apăra fiecare variantă.','Fără reclamă, ar fi aflat Ioana de Cămara? Fără email, s-ar fi întors miercuri?'],
+ 7:['Din ultimele 10 magazine online pe care ai intrat, de la câte ai cumpărat?','La 50 din 100 ar cumpăra fiecare al doilea curios. Se întâmplă asta chiar și într-un magazin fizic?','Majoritatea vizitelor sunt oameni care doar se uită, compară prețuri sau au ajuns din greșeală.'],
+ 8:['Întreabă-te: ce cifră, dacă s-ar schimba, m-ar face să decid altfel?','Venitul total crește și atunci când pierzi bani la fiecare comandă. Te ajută să alegi?'],
+ 9:['Încearcă întâi câte o singură pârghie și notează cu cât se mișcă rezultatul.','Reducerile cresc conversia, dar scad marja. Mișcă-le pe amândouă în sensuri opuse.','Pentru pragul de rentabilitate: coboară traficul sau conversia până când rezultatul trece prin zero.'],
+ 10:['Mișcă doar bugetul și urmărește punctul „acum” pe curbă. Unde este vârful?','Scoate reducerea, apoi caută din nou vârful. S-a mutat?','Pornește câte o decizie și citește rândul ei din tabel: aduce mai mult decât costă?'],
+ 11:['Ce aduce fiecare variantă: mai multe comenzi sau mai mulți bani la aceeași comandă?','Fiecare comandă în plus costă 14 lei de ambalat și livrat.','Două dintre variante aduc exact același număr de comenzi în plus. Care?'],
+ 12:['Întreabă-te ce compari: momente în timp, categorii, părți dintr-un întreg sau două mărimi?','Timp: linie. Categorii: bare. Părți dintr-un întreg: circular. Două mărimi: puncte.'],
+ 13:['Citește cifrele de pe axa verticală, nu înălțimea barelor.','De la ce valoare pornește axa?'],
+ 14:['Uită-te la timpul verbului: trecut, prezent sau viitor?','Afirmația spune ce se va întâmpla sau ce ar trebui să facem?'],
+ 15:['Comparați septembrie cu noiembrie, nu priviți toată perioada la un loc.','Luați canalele pe rând. Care arată foarte diferit în noiembrie?','Coloana „Contribuție pe comandă”, canalul Reclame. Apoi căutați de ce: AOV, marjă, marketing pe comandă.'],
+ 16:['Poți arăta cu degetul cifra în tabel? Atunci este observație.','Cuvinte ca „pentru că”, „deci”, „doar când” sau un verb la viitor anunță o ipoteză.'],
+ 17:['Porniți de la cifra care v-a surprins cel mai mult în Laborator.','Alegeți un indicator care se poate mișca în termenul ales. Rata de revenire nu se vede într-o săptămână.','Spuneți dinainte la ce rezultat renunțați. Altfel, orice rezultat va părea un succes.']};
+const MORE={
+ 0:['cum lucrăm azi','<p>La fiecare câteva ecrane votați cu mâna ridicată înainte să vedeți răspunsul. Contează raționamentul, nu nimeritul.</p><p>Termenii <b>subliniați punctat</b> au o explicație scurtă: treci cu mouse-ul sau atinge-i. Butonul „Indiciu” dă câte un pas de gândire, fără răspuns.</p>'],
+ 1:['ce înseamnă „rezultat” în această lecție','<p>Folosim un <b>rezultat simplificat</b>: venit minus costul mărfii, marketing, ambalare și livrare, costuri fixe. Este suficient ca să vezi unde se duc banii.</p><p>Nu este profitul din contabilitate: lipsesc taxele, retururile, comisioanele de plată și stocul nevândut.</p>'],
+ 2:['cum arată eBusiness într-o firmă mică','<ul><li><b>Stoc sincronizat:</b> site-ul nu mai vinde un produs epuizat.</li><li><b>Facturare automată:</b> factura pleacă singură după plată.</li><li><b>Mesaje automate:</b> clientul află singur când a plecat coletul.</li><li><b>Rapoarte:</b> vezi luni dimineața ce s-a vândut, fără să aduni de mână.</li></ul><p>Niciunul nu este „vânzare”, dar toate decid dacă vânzarea aduce bani sau bătăi de cap.</p>'],
+ 3:['de ce contează unde pui granița','<p>Granița nu este un scop în sine. Te ajută să vezi unde investești: mulți antreprenori plătesc pentru un site frumos (eCommerce) și lasă stocul, facturile și suportul pe hârtie.</p><p>Semnul că un proces din spate are nevoie de atenție: aceeași informație este tastată de două ori în două locuri.</p>'],
+ 4:['de ce contează separarea','<p>Mecanismul de venit îți schimbă indicatorii. La <b>vânzare directă</b> urmărești valoarea comenzii. La <b>abonament</b> urmărești câți clienți renunță în fiecare lună. La <b>comision</b> urmărești volumul tranzacțiilor altora. La <b>publicitate</b> urmărești câți oameni îți văd conținutul.</p><p>Aceeași firmă poate combina mai multe: Cămara poate vinde borcane și, separat, o cutie lunară.</p>'],
+ 5:['ce programe stau în spatele etapelor','<ul><li><b>Platforma magazinului:</b> site, coș, comenzi.</li><li><b>Procesatorul de plăți:</b> încasează cardul și virează banii.</li><li><b>ERP</b> (Enterprise Resource Planning): un singur program pentru stoc, facturi și contabilitate.</li><li><b>SCM</b> (Supply Chain Management): relația cu furnizorii și aprovizionarea.</li><li><b>CRM:</b> istoricul fiecărui client.</li></ul><p>O firmă mică le are adesea pe toate într-un singur abonament sau într-o foaie de calcul. Important este ca datele să circule între ele.</p>'],
+ 6:['ce îți trebuie ca să integrezi canalele','<ul><li>Un singur cont de client, recunoscut pe telefon și pe laptop.</li><li>Lista de cumpărători trimisă automat către platforma de reclame, ca să nu plătești pentru cine a cumpărat deja.</li><li>Suport care vede comenzile.</li><li>Acordul clientului: emailurile comerciale și urmărirea în scop publicitar cer consimțământ, conform regulilor de protecție a datelor (GDPR).</li></ul>'],
+ 7:['cum se calculează și de unde iei cifrele','<p><b>Rata de conversie</b> = comenzi ÷ vizite. <b>Rata de abandon a coșului</b> = 1 - comenzi ÷ coșuri pornite.</p><p>Vizitele și pașii intermediari vin din instrumentul de analiză a traficului; comenzile, din platforma magazinului. Verifică dacă ambele numără aceeași perioadă.</p><p>O rată mică nu este automat o problemă: un magazin cu produse scumpe convertește mai rar, dar câștigă mai mult la fiecare comandă.</p>'],
+ 8:['indicatori care sună bine și indicatori care ajută','<p>Un <b>indicator de vanitate</b> crește frumos, dar nu îți schimbă nicio decizie: urmăritori, vizite totale, venit total.</p><p>Un <b>indicator util</b> are trei semne: este un raport (ceva împărțit la altceva), îl poți influența și știi dinainte ce faci dacă urcă sau coboară.</p>'],
+ 9:['cum folosești un model simplu fără să te păcălească','<p>Modelul este util pentru întrebări de tipul „ce contează mai mult?”, nu pentru prognoze exacte.</p><p>Înainte de a crede un rezultat, întreabă: <b>ce am presupus că rămâne neschimbat?</b> Aici, o reducere de preț nu schimbă singură conversia, iar bugetul nu aduce singur trafic. În realitate se mișcă împreună.</p>'],
+ 10:['ipotezele din spatele acestui ecran','<ul><li><b>Reclame:</b> vizitele plătite cresc cu radicalul bugetului. De patru ori mai mulți bani aduc doar de două ori mai multe vizite, pentru că ajungi la oameni tot mai puțin interesați.</li><li><b>Reducere:</b> fiecare punct de reducere aduce cu 1,5% mai multe comenzi din reclame, dar scade prețul încasat și marja.</li><li><b>Livrare în 24 de ore:</b> +10% conversie, +7 lei pe comandă.</li><li><b>Pachete cadou:</b> +12% la valoarea comenzii, +5 lei pe comandă.</li><li><b>Chat:</b> +8% conversie, +2.000 lei pe lună.</li></ul><p>Toate aceste legături sunt inventate pentru exercițiu. În afacerea ta le afli doar testând, câte una pe rând.</p><p><b>Ideea de reținut:</b> o decizie merită dacă marja brută pe care o aduce este mai mare decât costul ei. La volum mic, un cost fix (chatul) se scoate greu; la volum mare, un cost pe comandă (livrarea rapidă) devine cel scump.</p>'],
+ 11:['cum crești valoarea medie a comenzii fără reduceri','<ul><li><b>Pachete:</b> trei borcane la un loc, cu ambalaj de cadou.</li><li><b>Prag de transport gratuit</b> pus puțin peste valoarea medie actuală.</li><li><b>Recomandări în coș:</b> „se potrivește cu”.</li><li><b>Gramaje mai mari</b> la produsele care se revând.</li></ul><p>Toate au un cost. Verifică în simulator dacă marja rămasă îl acoperă.</p>'],
+ 12:['trei reguli de bază pentru un grafic clar','<ul><li>Titlul spune ce se măsoară, iar axa spune unitatea.</li><li>Etichetele stau lângă linii sau bare, nu într-o legendă separată.</li><li>Culoarea nu poartă singură informația: adaugă formă, linie întreruptă sau text.</li></ul>'],
+ 13:['alte trei feluri în care un grafic poate păcăli','<ul><li><b>Perioada aleasă convenabil:</b> graficul începe exact după o scădere.</li><li><b>Două axe verticale:</b> scările pot fi potrivite astfel încât liniile să pară legate.</li><li><b>Efecte 3D și suprafețe:</b> feliile din față par mai mari decât sunt.</li></ul><p>Întrebarea de control: ce a ales autorul să nu arate?</p>'],
+ 14:['cu ce începi într-o firmă mică','<p>Primele două trepte se pot urca cu o foaie de calcul și cu rapoartele platformei de magazin. Treapta a treia cere istoric: cel puțin câteva luni de date curate.</p><p>Greșeala frecventă este saltul direct la „ce facem”, fără „ce s-a întâmplat” și „de ce”.</p>'],
+ 15:['cum citești tabelul','<ul><li><b>Vizite, comenzi, conversie:</b> cât de bine transformă canalul vizitatorii în cumpărători.</li><li><b>AOV și marjă:</b> cât valorează o comandă și cât rămâne din ea.</li><li><b>Marketing pe comandă:</b> cât plătești ca să obții o comandă pe acel canal.</li><li><b>Contribuție pe comandă:</b> ce rămâne după marketing, ambalare și livrare. Dacă este negativă, fiecare comandă în plus mărește pierderea.</li></ul>'],
+ 16:['trei întrebări înainte să spui „din cauza”','<ul><li><b>Există o a treia cauză?</b> Sezonul poate crește și bugetul, și comenzile.</li><li><b>Sensul poate fi invers?</b> Poate am mărit bugetul pentru că vedeam comenzile crescând.</li><li><b>Poate fi întâmplare?</b> Douăsprezece săptămâni sunt puține.</li></ul><p>Corelația este un motiv bun să faci un test, nu o dovadă.</p>'],
+ 17:['un exemplu de fișă completată','<p><b>Decizia:</b> oprim codul de reducere de 20% din reclame. <b>Pentru că:</b> în noiembrie, contribuția pe comandă din Reclame este negativă, iar marja canalului a scăzut de la 45% la 31%. <b>Măsurăm:</b> valoarea medie a comenzii și contribuția pe comandă, pe canalul Reclame. <b>Verificăm:</b> după două săptămâni. <b>Renunțăm dacă:</b> comenzile din reclame scad cu peste jumătate și contribuția totală a canalului nu se îmbunătățește.</p>'],
+ 18:['glosarul lecției','<div id="glosar"></div>']};
+const hintN={};
+function hintNext(i){const h=HINTS[i];if(!h)return;hintN[i]=Math.min((hintN[i]||0)+1,h.length);hintDraw(i);}
+function hintDraw(i){const h=HINTS[i],n=hintN[i]||0,s=screens[i],b=$('.hintbtn',s);if(!b)return;
+  $('.hints',s).innerHTML=h.slice(0,n).map(x=>`<li>${x}</li>`).join('');b.disabled=n>=h.length;b.textContent=n>=h.length?`Toate cele ${h.length} indicii sunt afișate`:n?`Încă un indiciu (${n} din ${h.length})`:`Indiciu (${h.length} disponibile)`;}
+function extrasInit(){screens.forEach((s,i)=>{const h=HINTS[i],m=MORE[i];if(!h&&!m)return;const d=document.createElement('div');d.className='extras';
+  d.innerHTML=(h?'<div class="hintbox"><button type="button" class="tbtn hintbtn" title="Următorul indiciu (I)"></button><ol class="hints" aria-live="polite"></ol></div>':'')+(m?`<details class="more"><summary>Citește mai mult: ${m[0]}</summary><div>${m[1]}</div></details>`:'');
+  s.appendChild(d);if(h){hintDraw(i);$('.hintbtn',d).addEventListener('click',()=>hintNext(i));}});
+  $('#glosar').innerHTML='<ul>'+GLOS.map(g=>`<li><b>${g[1]}:</b> ${g[2]}</li>`).join('')+'</ul>';}
+
+/* ================= NAVIGARE ================= */
+const screens=$$('.screen'),state=screens.map(()=>({rev:false}));
+const STAGES=['Deschidere','1 · Cum funcționează afacerea','2 · Ce măsurăm și cum arătăm','3 · Ce decidem și cum verificăm'];
+const HOOK={2:null,3:r=>clsRender(r),7:r=>funnelRender(r),8:r=>decMark(r),11:r=>{if(r)leverRender();},13:()=>axRender(),16:r=>stmMark(r),18:r=>{$$('#recap details').forEach(d=>{d.open=r;});}};
+let cur=0,t0=null;
+extrasInit();
+const rail=$('#rail');
+STAGES.forEach((n,si)=>{const idx=screens.map((s,i)=>+s.dataset.stage===si?i:-1).filter(i=>i>=0);
+  rail.insertAdjacentHTML('beforeend',`<div class="seg" style="flex:${idx.length}" data-s="${si}"><span class="seg-name">${n}</span><span class="seg-dots">${idx.map(i=>`<button type="button" class="dot" data-i="${i}" aria-label="Ecranul ${i+1}: ${esc(screens[i].dataset.title)}" title="${i+1}. ${esc(screens[i].dataset.title)}"></button>`).join('')}</span></div>`);});
+rail.addEventListener('click',e=>{const d=e.target.closest('.dot');if(d)go(+d.dataset.i);});
+function setReveal(i,on){state[i].rev=on;const s=screens[i];s.classList.toggle('revealed',on);$$('[data-secret]',s).forEach(e=>{e.hidden=!on;});HOOK[i]&&HOOK[i](on);if(i===cur)navUpdate();}
+function navUpdate(){const s=screens[cur],b=$('#bReveal');b.hidden=!s.hasAttribute('data-reveal');b.textContent=state[cur].rev?'Ascunde răspunsul':'Dezvăluie răspunsul';
+  $('#bPrev').disabled=cur===0;$('#bNext').disabled=cur===screens.length-1;
+  $('#count').textContent=`${cur+1} / ${screens.length} · ${s.dataset.title}`;}
+function go(i,focus){i=Math.max(0,Math.min(screens.length-1,i));if(i!==cur)mapStop();if(i>0&&!t0)t0=Date.now();cur=i;
+  screens.forEach((s,k)=>{s.hidden=k!==i;s.classList.remove('enter');});const s=screens[i];void s.offsetWidth;s.classList.add('enter');s.scrollTop=0;
+  $$('.dot').forEach(d=>{const k=+d.dataset.i;d.classList.toggle('cur',k===i);d.classList.toggle('done',k<i);});
+  $$('.seg').forEach(g=>g.classList.toggle('on',+g.dataset.s===+s.dataset.stage));
+  tipHide();tipify(s);
+  navUpdate();notesRender();$$('#toc button').forEach(b=>b.classList.toggle('cur',+b.dataset.i===i));
+  try{history.replaceState(null,'','#e'+(i+1));}catch(e){}
+  if(focus!==false){const h=$('h1,h2',s);if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}}
+$('#bPrev').addEventListener('click',()=>go(cur-1));$('#bNext').addEventListener('click',()=>go(cur+1));
+$('#bReveal').addEventListener('click',()=>setReveal(cur,!state[cur].rev));
+
+/* cuprins */
+$('#toc').innerHTML=STAGES.map((n,si)=>`<div><p class="label">${n}</p><ol>${screens.map((s,i)=>+s.dataset.stage===si?`<li><button type="button" data-i="${i}"><span>${i+1}</span><span>${esc(s.dataset.title)}</span><span>${NOTES[i].m} min</span></button></li>`:'').join('')}</ol></div>`).join('');
+function toc(on){$('#over').hidden=!on;if(on)$('#overClose').focus();}
+$('#toc').addEventListener('click',e=>{const b=e.target.closest('button');if(b){toc(false);go(+b.dataset.i);}});
+$('#overClose').addEventListener('click',()=>toc(false));$('#tToc').addEventListener('click',()=>toc($('#over').hidden));
+
+/* note */
+let nw=null,noPopup=false;
+const mm=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+function notesHTML(){const n=NOTES[cur],plan=NOTES.slice(0,cur+1).reduce((a,x)=>a+x.m,0);
+  return`<p class="clock"><span data-clock>${t0?mm((Date.now()-t0)/1000):'0:00'}</span> scurse · plan până la finalul acestui ecran: ${plan} min din 90</p>
+  <h3>${cur+1}. ${esc(screens[cur].dataset.title)} <span class="small">(${n.m} min)</span></h3>
+  <p><b>Scop:</b> ${n.s}</p><h3>Cum conduci</h3><ul>${n.p.map(x=>`<li>${x}</li>`).join('')}</ul>
+  <h3>Întrebări pentru discuție</h3><ul>${n.q.map(x=>`<li>${x}</li>`).join('')}</ul>${n.x?`<h3>Ipoteze și limite</h3><ul>${n.x.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+  ${cur<screens.length-1?`<p class="small">Urmează: ${esc(screens[cur+1].dataset.title)}</p>`:''}`;}
+function notesRender(){if(!$('#drawer').hidden)$('#drawerBody').innerHTML=notesHTML();
+  if(nw&&!nw.closed){try{nw.document.getElementById('nb').innerHTML=notesHTML();}catch(e){}}}
+setInterval(()=>{if(!t0)return;const t=mm((Date.now()-t0)/1000);$$('[data-clock]').forEach(e=>{e.textContent=t;});
+  if(nw&&!nw.closed){try{const c=nw.document.querySelector('[data-clock]');if(c)c.textContent=t;}catch(e){}}},1000);
+function drawer(on){$('#drawer').hidden=!on;$('#tNotes').setAttribute('aria-pressed',on);if(on){$('#drawerWhy').textContent=noPopup?'Fereastra separată nu este disponibilă aici, așa că notele apar peste ecran. Deschide fișierul HTML local ca să le ții pe al doilea monitor.':'';notesRender();}}
+function notes(){if(nw&&!nw.closed){nw.focus();return;}if(!$('#drawer').hidden){drawer(false);return;}
+  if(!noPopup){try{nw=window.open('','note_profesor','width=560,height=820');}catch(e){nw=null;}}
+  if(!nw){noPopup=true;drawer(true);return;}
+  const cs=getComputedStyle(document.documentElement),v=k=>cs.getPropertyValue(k).trim();
+  nw.document.open();nw.document.write(`<!doctype html><html lang="ro"><head><meta charset="utf-8"><title>Note profesor · Lecția 1</title><style>body{margin:0;padding:1rem 1.2rem;font:16px/1.5 ${v('--body')};background:${v('--surface')};color:${v('--ink')}}h3{font-family:${v('--display')};margin:1rem 0 .2rem}ul{margin:.2rem 0;padding-left:1.2rem}li{margin:.25rem 0}.small{font-size:.85rem;color:${v('--muted')};font-weight:400}.clock{font-family:${v('--mono')};font-size:.9rem}header{display:flex;gap:.5rem;align-items:center;position:sticky;top:0;background:${v('--surface')};padding-bottom:.5rem;border-bottom:1px solid ${v('--line')}}button{font:inherit;padding:.4rem .9rem;border-radius:.4rem;border:2px solid ${v('--ink')};background:${v('--ink')};color:${v('--bg')};cursor:pointer;font-weight:700}</style></head><body><header><button id="pv">← Înapoi</button><button id="rv">Dezvăluie (R)</button><button id="nx">Înainte →</button></header><main id="nb"></main></body></html>`);nw.document.close();
+  nw.document.getElementById('pv').onclick=()=>go(cur-1,false);nw.document.getElementById('nx').onclick=()=>go(cur+1,false);
+  nw.document.getElementById('rv').onclick=()=>{if(screens[cur].hasAttribute('data-reveal'))setReveal(cur,!state[cur].rev);};
+  nw.document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ')go(cur+1,false);else if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1,false);else if(e.key.toLowerCase()==='r')nw.document.getElementById('rv').onclick();});
+  notesRender();}
+$('#tNotes').addEventListener('click',notes);$('#drawerClose').addEventListener('click',()=>drawer(false));
+
+/* mod prezentare, animații, temă */
+function present(){const on=!$('#app').classList.contains('present');$('#app').classList.toggle('present',on);$('#tPresent').setAttribute('aria-pressed',on);
+  try{if(on&&document.documentElement.requestFullscreen){const p=document.documentElement.requestFullscreen();p&&p.catch&&p.catch(()=>{});}else if(!on&&document.fullscreenElement){const p=document.exitFullscreen();p&&p.catch&&p.catch(()=>{});}}catch(e){}}
+function motion(on){document.documentElement.classList.toggle('reduce',on);$('#tMotion').setAttribute('aria-pressed',on);}
+function theme(){const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark';}
+$('#tPresent').addEventListener('click',present);$('#tMotion').addEventListener('click',()=>motion(!document.documentElement.classList.contains('reduce')));$('#tTheme').addEventListener('click',theme);
+try{motion(matchMedia('(prefers-reduced-motion: reduce)').matches);}catch(e){}
+
+document.addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;const t=e.target,typing=t.matches&&t.matches('input,textarea,select');
+  if(e.key==='Escape'){tipHide();if(!$('#over').hidden)toc(false);else if(!$('#drawer').hidden)drawer(false);else if(typing)t.blur();return;}
+  if(typing)return;const k=e.key.length===1?e.key.toLowerCase():e.key;
+  if(!$('#over').hidden&&k!=='o')return;
+  switch(k){
+    case'ArrowRight':case'PageDown':go(cur+1);break;case'ArrowLeft':case'PageUp':go(cur-1);break;
+    case' ':if(t.closest&&t.closest('button,summary,a'))return;go(cur+1);break;
+    case'Home':go(0);break;case'End':go(screens.length-1);break;
+    case'r':if(screens[cur].hasAttribute('data-reveal'))setReveal(cur,!state[cur].rev);break;
+    case'i':hintNext(cur);break;
+    case'n':notes();break;case'p':present();break;case'o':toc($('#over').hidden);break;case'm':motion(!document.documentElement.classList.contains('reduce'));break;case't':theme();break;
+    default:return;}
+  e.preventDefault();});
+window.addEventListener('hashchange',()=>{const m=/^#e(\d+)$/.exec(location.hash);if(m&&+m[1]-1!==cur)go(+m[1]-1);});
+
+/* ================= PORNIRE ================= */
+clsRender(false);comboRender();mapSel(0);jrRender();funnelRender(false);simSet(PRE.nov);tcSet(TC0);vizRender();axRender();anRender(0);labRender();fMode(false);
+const H0=location.hash,m0=/^#e(\d+)$/.exec(H0);go(m0?+m0[1]-1:0,false);
+let tipQ=false;const mo=new MutationObserver(()=>{if(tipQ)return;tipQ=true;requestAnimationFrame(()=>{tipQ=false;mo.disconnect();tipify(screens[cur]);mo.observe($('#stage'),{childList:true,subtree:true});});});mo.observe($('#stage'),{childList:true,subtree:true});
+
+/* ================= AUTOTEST (#selftest) ================= */
+window.__selftest=function(){const out={checks:[]};const ok=(n,c,d)=>out.checks.push({n,ok:!!c,d});
+  for(let i=0;i<screens.length;i++){go(i,false);ok('ecran '+(i+1)+' vizibil singur',screens.filter(s=>!s.hidden).length===1&&!screens[i].hidden);
+    if(screens[i].hasAttribute('data-reveal')){setReveal(i,true);ok('dezvăluire '+(i+1),$$('[data-secret]',screens[i]).every(e=>!e.hidden)&&($$('[data-secret]',screens[i]).length>0||i===18));setReveal(i,false);ok('ascundere '+(i+1),$$('[data-secret]',screens[i]).every(e=>e.hidden));setReveal(i,true);}
+    else ok('fără secrete '+(i+1),$$('[data-secret]',screens[i]).length===0);}
+  ok('note pentru fiecare ecran',NOTES.length===screens.length);ok('durată totală 90',NOTES.reduce((a,n)=>a+n.m,0)===90,NOTES.reduce((a,n)=>a+n.m,0));
+  const cs=calc(PRE.sep),cn=calc(PRE.nov);ok('simulator = date sept',Math.abs(cs.rez-SEP.rez)<.01&&Math.abs(cs.venit-SEP.venit)<.01,[cs.rez,SEP.rez]);ok('simulator = date nov',Math.abs(cn.rez-NOV.rez)<.01,[cn.rez,NOV.rez]);
+  ok('venit ≠ rezultat',cn.venit>cs.venit&&cn.rez<cs.rez&&NOV.com>SEP.com);
+  const h=calc({trafic:10000,conv:.03,aov:100,marja:.5,buget:1000});ok('formulă manuală',h.com===300&&h.venit===30000&&h.rez===15000-1000-4200-10000,h);
+  CLS.forEach((c,i)=>clsMove(i,c.z));setReveal(3,true);ok('clasificare corectă',$$('.chip.ok',s4).length===CLS.length&&$$('.chip.bad',s4).length===0);
+  clsMove(0,'ebiz');ok('clasificare greșită marcată',$$('.chip.bad',s4).length===1);$('#clsReset').click();ok('clasificare resetată',$$('#clsPool .chip').length===CLS.length);
+  $('#clsPool .chip').click();$('#zEcom').click();ok('clic în loc de drag',$$('#zEcom .chip').length===1);
+  let combos=0;$$('#relChips .chip').forEach(r=>{r.click();$$('#mecChips .chip').forEach(m=>{m.click();if($('#comboOut').textContent.length>80)combos++;});});ok('16 combinații',combos===16,combos);
+  $$('.node').forEach(n=>n.click());ok('hartă',mapI===6&&$('#mapOut').textContent.includes('Timpul de răspuns'));
+  $('#omInt').click();ok('canale integrate',$$('#journey .good').length===3);$('#omSep').click();ok('canale separate',$$('#journey .bad').length===3);
+  $('#qDilema .opt').click();ok('dilema reținută',dilema===0);
+  SL.forEach(s=>{const el=$('#sl_'+s.k);el.value=s.max;el.dispatchEvent(new Event('input',{bubbles:true}));});ok('simulator la maxim',sim.trafic===60000&&Math.abs(sim.conv-.06)<1e-9&&$('#simChart svg'));
+  SL.forEach(s=>{const el=$('#sl_'+s.k);el.value=s.min;el.dispatchEvent(new Event('input',{bubbles:true}));});ok('simulator la minim (pierdere)',calc(sim).rez<0&&$('#simKpi').textContent.includes('pierdere'));
+  $('#simReset').click();ok('simulator resetat',Math.abs(calc(sim).rez-NOV.rez)<.01);
+  ok('compromisuri: pornire = noiembrie',Math.abs(tcCalc(TC0).rez-NOV.rez)<.01&&Math.abs(tcCalc(TC0).com-NOV.com)<.01,[tcCalc(TC0).rez,NOV.rez]);
+  ok('compromisuri: buget dublu scade rezultatul',tcCalc({...TC0,buget:TC0.buget*1.7}).rez<tcCalc(TC0).rez);
+  ok('compromisuri: randament descrescător',tcCalc({...TC0,buget:4*TC0.buget}).com-tcCalc({...TC0,buget:0}).com<2.01*(tcCalc(TC0).com-tcCalc({...TC0,buget:0}).com));
+  const tb=$('#tc_buget');tb.value=2000;tb.dispatchEvent(new Event('input',{bubbles:true}));const tr=$('#tc_red');tr.value=0;tr.dispatchEvent(new Event('input',{bubbles:true}));$$('#tcTog .tog').forEach(t=>t.click());
+  ok('compromisuri: 5 decizii în tabel',$$('#tcTable tbody tr').length===5&&$('#tcChart svg')&&tc.chat&&tc.buget===2000,$$('#tcTable tbody tr').length);
+  out.tc={toate:Math.round(tcCalc(tc).rez),rapid:Math.round(tcCalc({...TC0,rapid:true}).rez-NOV.rez),pachet:Math.round(tcCalc({...TC0,pachet:true}).rez-NOV.rez),chat:Math.round(tcCalc({...TC0,chat:true}).rez-NOV.rez),faraRed:Math.round(tcCalc({...TC0,red:0}).rez-NOV.rez),buget2000faraRed:Math.round(tcCalc({...TC0,red:0,buget:2000}).rez)};
+  $('#tcReset').click();ok('compromisuri: resetare',$$('#tcTable tbody tr').length===1&&Math.abs(tcCalc(tc).rez-NOV.rez)<.01);
+  ok('pârghii: trafic = conversie < AOV',Math.abs(LEV[0].d-LEV[1].d)<.01&&LEV[2].d>LEV[0].d,LEV.map(l=>Math.round(l.d)));
+  let vz=0;$$('#vizTask .chip').forEach(q=>{q.click();$$('#vizType .chip').forEach(t=>{t.click();if($('#vizChart svg')&&$('#vizVerdict').textContent.length>20)vz++;});});ok('12 grafice',vz===12,vz);
+  ok('un singur grafic potrivit pe întrebare',VIZ.every(V=>V.v.filter(x=>x[0]===true).length===1&&V.v[V.best][0]===true));
+  const ax=$('#axStart');ax.value=0;ax.dispatchEvent(new Event('input',{bubbles:true}));ok('axa de la zero',$('#axFb').textContent.includes('spune adevărul'));
+  let lb=0;$$('#labPer .chip').forEach(p=>{p.click();$$('#labCh .chip').forEach(c=>{c.click();$$('#labMet .chip').forEach(m=>{m.click();if($('#labChart svg')&&$$('#labTable tbody tr').length===4)lb++;});});});ok('60 de stări de laborator',lb===60,lb);
+  ok('totaluri pe canale = total',Math.abs(CH.reduce((a,c)=>a+agg(ALLW,[c.id]).contrib,0)-agg(ALLW).contrib)<.01);
+  $$('#stms .stm').forEach((b,k)=>$(`.chip[data-v="${STM[k].o?1:0}"]`,b).click());ok('observații corecte',$('#verdict').textContent.includes(STM.length+' din '+STM.length));
+  $('#fDe').value='test';$('#fStop').value='prag';$('#fKpi .chip').click();$('#fForm').dispatchEvent(new Event('submit',{cancelable:true}));ok('fișă completă',$$('#fOut dd.empty').length===0&&$$('#fOut dd').length===5);
+  $('#fmMea').click();$('#fForm').dispatchEvent(new Event('submit',{cancelable:true}));ok('fișă afacerea mea: intervenție lipsă semnalată',$$('#fOut dd.empty').length===1);$('#fmCam').click();
+  ok('recapitulare deschisă',$$('#recap details').every(d=>d.open));
+  toc(true);ok('cuprins',$$('#toc button').length===screens.length);toc(false);
+  noPopup=true;notes();ok('note în sertar',!$('#drawer').hidden&&$('#drawerBody').textContent.includes('Scop'));notes();
+  const hk=Object.keys(HINTS).map(Number);hk.forEach(i=>{for(let k=0;k<HINTS[i].length+1;k++)hintNext(i);});ok('indicii afișate complet',hk.every(i=>$$('.hints li',screens[i]).length===HINTS[i].length&&$('.hintbtn',screens[i]).disabled),hk.length);
+  ok('fiecare ecran are ajutor în josul paginii',screens.every(s=>$('.extras',s)));ok('citește mai mult pe fiecare ecran',$$('details.more').length===screens.length,$$('details.more').length);
+  screens.forEach(s=>tipify(s));const tips=$$('.tip');ok('termeni cu explicație',tips.length>=40&&screens.filter(s=>$('.tip',s)).length>=12,[tips.length,screens.filter(s=>$('.tip',s)).length]);
+  ok('niciun termen în butoane sau titluri',!$('button .tip,h1 .tip,h2 .tip,svg .tip'));
+  tipShow(tips[0]);ok('tooltip afișat',!tipbox.hidden&&tipbox.textContent.length>20);tipHide();ok('tooltip ascuns',tipbox.hidden);
+  ok('glosar complet',$$('#glosar li').length===GLOS.length);ok('fiecare termen din glosar este recunoscut',GLOS.every((g,i)=>GONE[i].test(g[0].split('|')[0].replace(/\[(.)[^\]]*\]/g,'$1').replace(/\(\?:[^)]*\)\??/g,''))));
+  simSet({...PRE.nov,conv:.03,aov:170,marja:.5});ok('misiunea 2 se poate îndeplini',$$('#simMis li.done').length>=2,$$('#simMis li.done').length);simSet(PRE.nov);ok('misiuni nebifate în noiembrie',$$('#simMis li.done').length===0);
+  const html=$('#app').innerHTML;ok('fără NaN / undefined / Infinity',!/NaN|undefined|Infinity/.test(html),(html.match(/.{30}(NaN|undefined|Infinity).{30}/)||[''])[0]);
+  ok('fără linii de dialog',!new RegExp('['+String.fromCharCode(8211,8212)+']').test(document.body.innerHTML));
+  ok('fără erori JS',ERR.length===0,ERR);
+  out.date={sep:SEP,nov:NOV,reclameSep:rS,reclameNov:rN,parghii:LEV.map(l=>Math.round(l.d))};out.fail=out.checks.filter(c=>!c.ok);out.total=out.checks.length;return out;};
+if(H0==='#selftest'){let r;try{r=window.__selftest();}catch(e){r={crash:String(e&&e.stack||e)};}const pre=document.createElement('pre');pre.id='selftest';pre.textContent=JSON.stringify({total:r.total,fail:r.fail,crash:r.crash,tc:r.tc});document.body.appendChild(pre);}
+})();
+</script>
+
+</body>
+</html>

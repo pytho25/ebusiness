@@ -1,0 +1,17 @@
+# Drive export archive, contents already extracted
+*.zip
+
+.DS_Store
+~$*
+.claude/
+graphify-out/
+
+# Student personal data (attendance, notes about students): keep local only
+[Pp]rezenta*.xlsx
+Notes.docx
+
+# Original source materials and archives, kept local only
+old/
+
+# Text extracted from the original presentations, kept local only
+suport-curs/surse/
