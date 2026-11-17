@@ -1,0 +1,13 @@
+{
+  "name": "ebusiness",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Materiale de curs E-Business și Vizualizarea Datelor; serverul publică Lecția 1",
+  "scripts": {
+    "build": "node -e \"require('fs').accessSync('lectia-1-interactiva/lectia-1-ebusiness.html'); console.log('Static lesson, nothing to build')\"",
+    "start": "node lectia-1-interactiva/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

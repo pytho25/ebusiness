@@ -1,12 +1,12 @@
 // Minimal static file server for Lesson 1. No dependencies, Node.js standard library only.
-// Listens on $PORT (set by the hosting platform), or 8080 locally.
+// Listens on $PORT (set by the hosting platform), or 3000 when PORT is not set.
 
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
 const ROOT = __dirname;
-const PORT = Number(process.env.PORT) || 8080;
+const PORT = Number(process.env.PORT) || 3000;
 const HIDDEN = new Set(['server.js', 'package.json', 'package-lock.json']);
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
