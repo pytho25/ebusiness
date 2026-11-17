@@ -25,7 +25,12 @@ open lectia-1-interactiva/lectia-1-ebusiness.html
 
 ## Suportul de curs
 
-Documentul complet este `suport-curs/suport-curs-ebusiness-vizualizarea-datelor.md`. Aceleași capitole există și separat, în `suport-curs/capitole/`:
+Documentul complet există în două formate:
+
+- `suport-curs/suport-curs-ebusiness-vizualizarea-datelor.pdf`: versiunea gata de citit sau tipărit (317 pagini, A4).
+- `suport-curs/suport-curs-ebusiness-vizualizarea-datelor.md`: sursa în Markdown.
+
+Aceleași capitole există și separat, în `suport-curs/capitole/`:
 
 | Fișier | Capitol |
 |---|---|
